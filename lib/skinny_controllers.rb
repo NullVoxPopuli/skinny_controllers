@@ -14,7 +14,6 @@ require 'skinny_controllers/diet'
 require 'skinny_controllers/version'
 
 module SkinnyControllers
-
   # Tells the Diet what namespace of the controller
   # isn't going to be part of the model name
   #
@@ -30,8 +29,8 @@ module SkinnyControllers
   end
 
   cattr_accessor :allow_by_default do
-     true
-   end
+    true
+  end
 
   # the diet uses ActionController::Base's
   # `action_name` method to get the current action.
@@ -50,5 +49,4 @@ module SkinnyControllers
       'update'.freeze => DefaultVerbs::Update
     }
   end
-
 end

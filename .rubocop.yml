@@ -5,6 +5,9 @@ AllCops:
   DisplayCopNames: true
   DisplayStyleGuide: true
 
+Lint/AssignmentInCondition:
+  Enabled: false
+
 Lint/NestedMethodDefinition:
   Enabled: false
   Exclude:
@@ -40,6 +43,9 @@ Style/ClassAndModuleChildren:
   EnforcedStyle: nested
 
 Style/Documentation:
+  Enabled: false
+
+Style/DoubleNegation:
   Enabled: false
 
 Style/MissingElse:

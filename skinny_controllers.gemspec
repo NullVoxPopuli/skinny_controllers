@@ -4,7 +4,6 @@
 lib = File.expand_path('../lib', __FILE__)
 $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 
-
 require 'skinny_controllers/version'
 
 Gem::Specification.new do |s|
@@ -21,7 +20,7 @@ Gem::Specification.new do |s|
   s.files        = Dir['CHANGELOG.md', 'LICENSE' 'MIT-LICENSE', 'README.md', 'lib/**/*']
   s.require_path = 'lib'
 
-  s.test_files    = s.files.grep(%r{^(test|spec|features)/})
+  s.test_files = s.files.grep(%r{^(test|spec|features)/})
 
   s.required_ruby_version = '>= 2.0'
 
@@ -33,5 +32,4 @@ Gem::Specification.new do |s|
   s.add_development_dependency 'pry-byebug'
   s.add_development_dependency 'codeclimate-test-reporter'
   s.add_development_dependency 'rubocop'
-
 end

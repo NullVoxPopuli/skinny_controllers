@@ -2,15 +2,10 @@ module SkinnyControllers
   module Diet
     extend ActiveSupport::Concern
 
-    included do
-      #operation can be overridden
-      class_attribute :operation_class
-    end
-
     # @return an instance of the operation with default parameters
     def operation
       unless @operation
-        klass = get_operation_class
+        klass = operation_class
         @operation = klass.new(current_user, params)
       end
 
@@ -21,17 +16,12 @@ module SkinnyControllers
     #
     # @example SomeObjectsController => Operation::SomeObject::Action
     #
-    def get_operation_class
-      unless self.class.operation_class
-        model_name = model_name_from_controller
-        klass_name = operation_class_from_model(model_name)
-        klass = klass_name.safe_constantize
-        self.class.operation_class = klass || Operation::Default
-      end
-
-      self.class.operation_class
+    def operation_class
+      model_name = model_name_from_controller
+      klass_name = operation_class_from_model(model_name)
+      klass = klass_name.safe_constantize
+      klass || Operation::Default
     end
-
 
     # abstraction for `operation.run`
     # useful when there is no logic needed for deciding what to
@@ -58,9 +48,8 @@ module SkinnyControllers
 
     def resource_name_from_controller
       controller_name = self.class.name
-      resource_name = controller_name.gsub('Controller', '')
+      controller_name.gsub('Controller', '')
     end
-
 
     def operation_class_from_model(model_name)
       prefix = SkinnyControllers.operation_namespace
@@ -69,10 +58,7 @@ module SkinnyControllers
 
     def controller_name_prefix
       namespace = SkinnyControllers.controller_namespace || ''
-      if namespace
-        "#{namespace}::"
-      end
+      "#{namespace}::" if namespace
     end
-
   end
 end

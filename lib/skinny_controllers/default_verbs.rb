@@ -1,6 +1,5 @@
 module SkinnyControllers
   module DefaultVerbs
-
     # show
     Read = 'Read'.freeze
     # index
@@ -11,6 +10,5 @@ module SkinnyControllers
     Delete = 'Delete'.freeze
     # update
     Update = 'Update'.freeze
-
   end
 end

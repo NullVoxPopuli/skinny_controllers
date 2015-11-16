@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe SkinnyControllers::Policy::Base do
-  let(:klass){ SkinnyControllers::Policy::Base }
+  let(:klass) { SkinnyControllers::Policy::Base }
 
   context :instantiation do
     it 'sets accessors' do

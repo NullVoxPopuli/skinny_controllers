@@ -1,13 +1,12 @@
 require 'spec_helper'
 
-
 describe ::Operation::ExampleOperation::Read do
-  let(:klass){ ::Operation::ExampleOperation::Read }
+  let(:klass) { ::Operation::ExampleOperation::Read }
 
   context :instantiation do
     it 'sets accessors' do
       user = User.new
-      params = {a: :b}
+      params = { a: :b }
       operation = klass.new(user, params)
       expect(operation.current_user).to eq user
       expect(operation.params).to eq params
@@ -45,10 +44,9 @@ describe ::Operation::ExampleOperation::Read do
   describe :allowed_for? do
     it 'invokes the policy name' do
       op = klass.new(nil, nil)
-      name = op.policy_name
       policy = ::Policy::ExampleOperationPolicy.new(nil, nil)
 
-      allow(op).to receive(:policy_for){ policy }
+      allow(op).to receive(:policy_for) { policy }
       allow(policy).to receive(:read?)
       expect(policy).to receive(:read?)
 
@@ -57,5 +55,4 @@ describe ::Operation::ExampleOperation::Read do
       op.allowed_for?(nil)
     end
   end
-
 end

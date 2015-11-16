@@ -51,7 +51,7 @@ module SkinnyControllers
           self.authorized_via_parent = !!@scoped_model
         end
 
-        return @scoped_model
+        @scoped_model
       end
 
       def model
@@ -88,7 +88,7 @@ module SkinnyControllers
           association = association_name_from_object
           scoped.send(association)
         else
-          raise "Parent object of type #{scope[:type]} not accessible"
+          fail "Parent object of type #{scope[:type]} not accessible"
         end
       end
 
