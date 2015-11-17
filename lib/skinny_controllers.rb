@@ -34,6 +34,10 @@ module SkinnyControllers
     true
   end
 
+  cattr_accessor :accessible_to_method do
+    :is_accessible_to?
+  end
+
   # the diet uses ActionController::Base's
   # `action_name` method to get the current action.
   # From that action, we map what verb we want to use for our operation

@@ -15,7 +15,7 @@ module SkinnyControllers
 
       # defaults
       def read?(o = object)
-        o.is_accessible_to? user
+        o.send(:accessible_method, user)
       end
 
       def read_all?
@@ -26,6 +26,12 @@ module SkinnyControllers
         # object save
         accessible = object.map { |ea| read?(ea) }
         accessible.all?
+      end
+
+      private
+
+      def accessible_method
+        SkinnyControllers.accessible_to_method
       end
     end
   end
