@@ -2,14 +2,11 @@ module SkinnyControllers
   module Diet
     extend ActiveSupport::Concern
 
+    # TODO: what if we want multiple operations per action?
+    #
     # @return an instance of the operation with default parameters
     def operation
-      unless @operation
-        klass = operation_class
-        @operation = klass.new(current_user, params)
-      end
-
-      @operation
+      @operation ||= operation_class.new(current_user, params)
     end
 
     # Assumes the operation name from the controller name
@@ -20,7 +17,23 @@ module SkinnyControllers
       model_name = model_name_from_controller
       klass_name = operation_class_from_model(model_name)
       klass = klass_name.safe_constantize
-      klass || Operation::Default
+      klass || default_operation_class_for(model_name)
+    end
+
+    # dynamically creates a module for the model if it
+    # isn't already defined
+    def default_operation_class_for(model_name)
+      default_operation = Operation::Default
+      namespace = default_operation_namespace_for(model_name)
+
+      default = "#{namespace.name}::Default".safe_constantize
+      default || namespace.const_set('Default'.freeze, default_operation.dup)
+    end
+
+    def default_operation_namespace_for(model_name)
+      parent_namespace = Operation::Default.name.deconstantize
+      namespace = "#{parent_namespace}::#{model_name}".safe_constantize
+      namespace || Operation.const_set(model_name, Module.new)
     end
 
     # abstraction for `operation.run`

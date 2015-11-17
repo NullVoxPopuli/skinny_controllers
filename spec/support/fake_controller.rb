@@ -4,4 +4,14 @@ class FakeController
   def action_name
     'index'
   end
+
+  def current_user
+    @current_user ||= User.new
+  end
+
+  # kinda:
+  # http://api.rubyonrails.org/classes/ActionController/Parameters.html
+  def params
+    {}
+  end
 end
