@@ -1,8 +1,6 @@
 require 'rails_helper'
 
-
 describe 'definitions of operations and policies' do
-
   it 'loads operations' do
     is_defined = defined? EventOperations
     expect(is_defined).to be_truthy

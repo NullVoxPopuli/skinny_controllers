@@ -8,7 +8,6 @@ require 'support/rails_app/config/environment'
 
 ActiveRecord::Migration.maintain_test_schema!
 
-
 # set up db
 # be sure to update the schema if required by doing
 # - cd spec/rails_app
