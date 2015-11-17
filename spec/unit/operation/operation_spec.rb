@@ -1,7 +1,18 @@
 require 'spec_helper'
 
-describe ::Operation::ExampleOperation::Read do
-  let(:klass) { ::Operation::ExampleOperation::Read }
+describe Operation::ExampleOperation::Read do
+  let(:klass) { Operation::ExampleOperation::Read }
+
+  describe 'static shorthand access' do
+
+    it 'creates and runs the opreation' do
+      expect(Policy::ExampleOperationPolicy).to receive(:allowed?)
+      expect(Operation::ExampleOperation::Read).to receive(:new)
+
+      model = Operation::ExampleOperation::Read.run(User.new, {})
+    end
+
+  end
 
   context :instantiation do
     it 'sets accessors' do
