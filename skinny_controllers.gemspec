@@ -26,10 +26,24 @@ Gem::Specification.new do |s|
 
   s.add_runtime_dependency 'activesupport'
 
-  s.add_development_dependency 'rails'
-  s.add_development_dependency 'awesome_print'
-  s.add_development_dependency 'rspec'
-  s.add_development_dependency 'pry-byebug'
-  s.add_development_dependency 'codeclimate-test-reporter'
+  # Quality Control
   s.add_development_dependency 'rubocop'
+  s.add_development_dependency 'rspec'
+  s.add_development_dependency 'codeclimate-test-reporter'
+
+  # Debugging
+  s.add_development_dependency 'awesome_print'
+  s.add_development_dependency 'pry-byebug'
+
+  # for testing a gem with a rails app (controller specs)
+  # https://codingdaily.wordpress.com/2011/01/14/test-a-gem-with-the-rails-3-stack/
+  s.add_development_dependency 'bundler'
+  s.add_development_dependency 'rails'
+  s.add_development_dependency 'factory_girl'
+  s.add_development_dependency 'factory_girl_rails'
+  s.add_development_dependency 'rspec-rails'
+  s.add_development_dependency 'sqlite3'
+
+
+
 end

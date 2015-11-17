@@ -9,6 +9,8 @@ An implementation of role-based policies and operations to help controllers lose
 
 The goal of this project is to help API apps be more slim, and separate logic as much as possible.
 
+This gem is inspired by [trailblazer](https://github.com/apotonick/trailblazer), following similar patterns, yet allowing the structure of the rails app to not be entirely overhauled.
+
 # Installation
 
 ```ruby
@@ -20,7 +22,7 @@ or
 
 # Usage
 
-In a controller:
+## In a controller:
 
 ```ruby
 include SkinnyControllers::Diet
@@ -33,15 +35,104 @@ and that's it!
 
 The above does a multitude of assumptions to make sure that you can type the least amount code possible.
 
-1. Your controller name is based off your controller name
-2. Any defined policies or operations follow the formats:
-  - `Policy::#{Model.name}Policy`
-  - `Operations::#{Model.name}`
+1. Your controller name is based off your model name (configurable per controller)
+2. Any defined policies or operations follow the formats (though they don't have to exist):
+  - `#{Model.name}Policy`
+  - `#{Model.name}Operations`
 3. Your model responds to `find`, and `where`
 4. Your model responds to `is_accessible_to?`. This can be changed at `SkinnyControllers.accessible_to_method`
 
-TODO: write a rake task that generates `app/policies` and `app/operations`.
+### Your model name is different from your resource name
+Lets say you have a JSON API resource that you'd like to render that has some additional/subset of data.
+Maybe the model is an `Event`, and the resource an `EventSummary` (which could do some aggregation of `Event` data).
 
-Policies can be placed in `app/policies` of your rails app.
+The naming of all the objects should be as follows:
+ - `EventSummariesController`
+ - `EventSummaryOperations::*`
+ - `EventSummaryPolicy`
+ - and the model is still `Event`
 
-Operations can be placed in `app/operations` of your rails app.
+In `EventSummariesController`, you would make the following additions:
+```ruby
+class EventSummariesController < ApiController # or whatever your superclass is
+  include SkinnyControllers::Diet
+  model_class = Event
+
+  def index
+    render json: model, each_serializer: EventSummariesSerializer
+  end
+
+  def show
+    render json: model, serializer: EventSummariesSerializer
+  end
+end
+```
+Note that `each_serializer` and `serializer` is not part of `SkinnyControllers`, and is part of [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers).
+
+## Defining Operations
+
+Operations should be placed in `app/operations` of your rails app.
+
+For operations concerning an `Event`, they should be under `app/operations/event_operations/`.
+
+Using the example from the specs:
+```ruby
+module EventOperations
+  class Read < SkinnyControllers::Operation::Base
+    def run
+      model if allowed?
+    end
+  end
+end
+```
+
+alternatively, all operation verbs can be stored in the same file under (for example) `app/operations/user_operations.rb`
+
+```ruby
+module UserOperations
+  class Read < SkinnyControllers::Operation::Base
+    def run
+      model if allowed?
+    end
+  end
+
+  class ReadAll < SkinnyControllers::Operation::Base
+    def run
+      model if allowed?
+    end
+  end
+end
+```
+
+
+## Defining Policies
+
+Policies should be placed in `app/policies` of your rails app.
+These are where you define your access logic, and how to decide if a user has access to the `object`
+
+```ruby
+class EventPolicy < SkinnyControllers::Policy::Base
+  def read?(o = object)
+    o.is_accessible_to?(user)
+  end
+end
+```
+
+
+## Globally Configurable Options
+
+All of these can be set on `SkinnyControllers`,
+e.g.:
+```ruby
+SkinnyControllers.controller_namespace = 'API'
+```
+
+The following options are available:
+ - `operations_namespace`
+ - `operations_suffix`
+ - `policy_suffix`
+ - `controller_namespace` defaults to `''`
+ - `allow_by_default` defaults to `true`
+ - `accessible_to_method` defaults to `is_accessible_to?`
+ - `accessible_to_scope` defaults to `accessible_to`
+ - `action_map` see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)

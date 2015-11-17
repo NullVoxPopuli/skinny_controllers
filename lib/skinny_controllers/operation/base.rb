@@ -41,11 +41,29 @@ module SkinnyControllers
       end
 
       def object_class
-        @object_class ||= object_type_of_interest.demodulize.constantize
+        unless @object_class
+          # "Namespace::Model" => "Model"
+          model_name = object_type_of_interest.demodulize
+          # "Model" => Model
+          @object_class = model_name.constantize
+        end
+
+        @object_class
       end
 
       def object_type_of_interest
-        @object_type_name ||= self.class.name.deconstantize.demodulize
+        unless @object_type_name
+          # Namespace::ModelOperations::Verb
+          klass_name = self.class.name
+          # Namespace::ModelOperations::Verb => Namespace::ModelOperations
+          namespace = klass_name.deconstantize
+          # Namespace::ModelOperations => ModelOperations
+          nested_namespace = namespace.demodulize
+          # ModelOperations => Model
+          @object_type_name = nested_namespace.gsub(SkinnyControllers.operations_suffix, '')
+        end
+
+        @object_type_name
       end
 
       def association_name_from_object

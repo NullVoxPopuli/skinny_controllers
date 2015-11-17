@@ -31,9 +31,11 @@ module SkinnyControllers
     end
 
     def default_operation_namespace_for(model_name)
-      parent_namespace = Operation::Default.name.deconstantize
-      namespace = "#{parent_namespace}::#{model_name}".safe_constantize
-      namespace || Operation.const_set(model_name, Module.new)
+      desired_namespace = operation_namespace_from_model(model_name)
+
+      parent_namespace = SkinnyControllers.operations_namespace
+      namespace = "#{parent_namespace}::#{desired_namespace}".safe_constantize
+      namespace || Object.const_set(desired_namespace, Module.new)
     end
 
     # abstraction for `operation.run`
@@ -45,6 +47,10 @@ module SkinnyControllers
     end
 
     private
+
+    def operation_namespace_from_model(model_name)
+      "#{model_name}#{SkinnyControllers::operations_suffix}"
+    end
 
     # action name is inherited from ActionController::Base
     # http://www.rubydoc.info/docs/rails/2.3.8/ActionController%2FBase%3Aaction_name
@@ -65,8 +71,9 @@ module SkinnyControllers
     end
 
     def operation_class_from_model(model_name)
-      prefix = SkinnyControllers.operation_namespace
-      "#{prefix}::#{model_name}::#{verb_for_action}"
+      prefix = SkinnyControllers.operations_namespace
+      namespace = operation_namespace_from_model(model_name)
+      "#{prefix}::#{namespace}::#{verb_for_action}"
     end
 
     def controller_name_prefix

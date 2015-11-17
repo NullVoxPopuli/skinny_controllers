@@ -11,7 +11,7 @@ describe SkinnyControllers::Diet do
     include SkinnyControllers::Diet
   end
 
-  class ExampleOperationsController < FakeController
+  class ExamplesController < FakeController
     include SkinnyControllers::Diet
   end
 
@@ -23,33 +23,34 @@ describe SkinnyControllers::Diet do
 
   let(:controller) { FakeObjectsController.new }
   let(:some_controller) { API::SomeObjectsController.new }
-  let(:example) { ExampleOperationsController.new }
+  let(:example) { ExamplesController.new }
 
   context :default_operation_class_for do
     it 'creates a namespace' do
-      expect(defined? SkinnyControllers::Operation::SomeObject::Default).to be_falsey
+      expect(defined? SomeObjectOperations::Default).to be_falsey
       some_controller.default_operation_class_for('SomeObject')
-      expect(defined? SkinnyControllers::Operation::SomeObject::Default).to be_truthy
+      expect(defined? SomeObjectOperations::Default).to be_truthy
     end
   end
 
   context :default_operation_namespace_for do
     before(:each) do
       # just in case of race conditions
-      if defined? SkinnyControllers::Operation::SomeObject
-        SkinnyControllers::Operation.send(:remove_const, :SomeObject)
+      if defined? SomeObjectOperations
+        # this is a scary command o.o
+        Object.send(:remove_const, :SomeObjectOperations)
       end
     end
 
     it 'creates a namespace' do
-      expect(defined? SkinnyControllers::Operation::SomeObject).to be_falsey
+      expect(defined? SomeObjectOperations).to be_falsey
       some_controller.default_operation_namespace_for('SomeObject')
-      expect(defined? SkinnyControllers::Operation::SomeObject).to be_truthy
+      expect(defined? SomeObjectOperations).to be_truthy
     end
   end
 
   context :operation do
-    let(:operation_class) { Operation::ExampleOperation::Read }
+    let(:operation_class) { ExampleOperations::Read }
     before(:each) do
       allow(example).to receive(:verb_for_action) { operation_class }
       allow(example).to receive(:verb_for_action) { SkinnyControllers::DefaultVerbs::Read }
@@ -69,13 +70,13 @@ describe SkinnyControllers::Diet do
   context :operation_class do
     it 'gets the default operation class' do
       klass = controller.operation_class
-      expect(klass).to eq SkinnyControllers::Operation::FakeObject::Default
+      expect(klass).to eq FakeObjectOperations::Default
     end
 
     it 'gets an explicitly defined operation class' do
       allow(example).to receive(:verb_for_action) { SkinnyControllers::DefaultVerbs::Read }
       klass = example.operation_class
-      expect(klass).to eq Operation::ExampleOperation::Read
+      expect(klass).to eq ExampleOperations::Read
     end
   end
 
@@ -96,13 +97,13 @@ describe SkinnyControllers::Diet do
       end
 
       it 'returns the model' do
-        expect(example.model).to be_a_kind_of ExampleOperation
+        expect(example.model).to be_a_kind_of Example
       end
     end
 
     context 'action is not explicitly defined' do
       it 'returns the model' do
-        expect(example.model).to be_a_kind_of ExampleOperation
+        expect(example.model).to be_a_kind_of Example
       end
     end
   end
@@ -138,8 +139,8 @@ describe SkinnyControllers::Diet do
       verb = SkinnyControllers::DefaultVerbs::ReadAll
       allow(some_controller).to receive(:verb_for_action) { verb }
       name = 'SomeObject'
-
-      expected = SkinnyControllers.operation_namespace + '::' + name + '::' + verb
+      suffix = SkinnyControllers.operations_suffix
+      expected = SkinnyControllers.operations_namespace + '::' + name + suffix + '::' + verb
       result = some_controller.send(:operation_class_from_model, name)
 
       expect(result).to eq expected

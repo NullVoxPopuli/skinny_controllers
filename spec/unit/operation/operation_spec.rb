@@ -1,21 +1,21 @@
 require 'spec_helper'
 
-describe Operation::ExampleOperation::Read do
-  let(:klass) { Operation::ExampleOperation::Read }
+describe ExampleOperations::Read do
+  let(:klass) { ExampleOperations::Read }
 
   describe 'static shorthand access' do
     it 'creates and runs the opreation' do
       skip 'No idea why self.new in a class method returns nil'
-      expect(Policy::ExampleOperationPolicy).to receive(:allowed?)
-      expect(Operation::ExampleOperation::Read).to receive(:new)
+      expect(ExamplePolicy).to receive(:allowed?)
+      expect(ExampleOperations::Read).to receive(:new)
 
-      Operation::ExampleOperation::Read.run(User.new, {})
+      Operation::ExampleOperations::Read.run(TestUser.new, {})
     end
   end
 
   context :instantiation do
     it 'sets accessors' do
-      user = User.new
+      user = TestUser.new
       params = { a: :b }
       operation = klass.new(user, params)
       expect(operation.current_user).to eq user
@@ -26,35 +26,35 @@ describe Operation::ExampleOperation::Read do
   describe :object_class do
     it 'determines the object class' do
       op = klass.new(nil, nil)
-      expect(op.object_class).to eq ExampleOperation
+      expect(op.object_class).to eq Example
     end
   end
 
   describe :object_type_of_interest do
     it 'determines the object class name' do
       op = klass.new(nil, nil)
-      expect(op.object_type_of_interest).to eq ExampleOperation.name
+      expect(op.object_type_of_interest).to eq Example.name
     end
   end
 
   describe :policy_class do
     it 'derives the class for the policy' do
       op = klass.new(nil, nil)
-      expect(op.policy_class).to eq Policy::ExampleOperationPolicy
+      expect(op.policy_class).to eq ExamplePolicy
     end
   end
 
-  describe :policy_name do
+  describe :policy_method_name do
     it 'derives the policy name from the operation name' do
       op = klass.new(nil, nil)
-      expect(op.policy_name).to eq 'read?'
+      expect(op.policy_method_name).to eq 'read?'
     end
   end
 
   describe :allowed_for? do
     it 'invokes the policy name' do
       op = klass.new(nil, nil)
-      policy = ::Policy::ExampleOperationPolicy.new(nil, nil)
+      policy = ExamplePolicy.new(nil, nil)
 
       allow(op).to receive(:policy_for) { policy }
       allow(policy).to receive(:read?)

@@ -14,8 +14,8 @@ describe SkinnyControllers::Policy::Base do
   end
 
   context 'default access methods' do
-    let(:object){ ExampleOperation.new }
-    let(:user){ User.new }
+    let(:object){ Example.new }
+    let(:user){ TestUser.new }
 
     context :default? do
       it 'returns the default value' do
@@ -41,7 +41,7 @@ describe SkinnyControllers::Policy::Base do
 
     context :read_all? do
       it 'calls the accessible method for each object' do
-        object2 = ExampleOperation.new
+        object2 = Example.new
         policy = klass.new(user, [object, object2])
 
         expect(object).to receive(SkinnyControllers.accessible_to_method).once

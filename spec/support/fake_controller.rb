@@ -6,7 +6,7 @@ class FakeController
   end
 
   def current_user
-    @current_user ||= User.new
+    @current_user ||= TestUser.new
   end
 
   # kinda:

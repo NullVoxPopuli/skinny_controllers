@@ -1,4 +1,4 @@
-class ExampleOperation
+class Example
   class << self
     def find(*_args)
       new

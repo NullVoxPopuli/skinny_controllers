@@ -15,17 +15,11 @@ require 'skinny_controllers/operation/default'
 require 'skinny_controllers/diet'
 require 'skinny_controllers/version'
 
-# load the policy and operation to the top level name space.
-# TODO: this might be horrible
-#   the problem here is that specify numerous namespaces to
-#   define policies and namespaces gets cumbersome.
-#   Maybe there is a way to wrap a namespace...
-#   Or maybe that's why Rails perfers suffixes on its objects
-#   e.g.: XController, XSerializer, XHelper, etc
-$LOAD_PATH.unshift Dir[File.dirname(__FILE__) + '/skinny_controllers/'].first
-
-# Object.const_set("Policy", SkinnyControllers::Policy)
-# Object.const_set("Operation", SkinnyControllers::Operation)
+# load the policies and operations to the top level name space.
+if defined? Rails
+  $LOAD_PATH.unshift Rails.root + '/app/operations'
+  $LOAD_PATH.unshift Rails.root + '/app/policies'
+end
 
 module SkinnyControllers
   # Tells the Diet what namespace of the controller
@@ -37,9 +31,20 @@ module SkinnyControllers
   #  # 'API::' would be removed from 'API::Namespace::ObjectNamesController'
   cattr_accessor :controller_namespace
 
-  #
-  cattr_accessor :operation_namespace do
-    'Operation'.freeze
+  cattr_accessor :operations_suffix do
+    'Operations'
+  end
+
+  cattr_accessor :policy_suffix do
+    'Policy'
+  end
+
+  cattr_accessor :operations_namespace do
+    ''.freeze
+  end
+
+  cattr_accessor :policies_namespace do
+    ''.freeze
   end
 
   cattr_accessor :allow_by_default do
@@ -48,6 +53,10 @@ module SkinnyControllers
 
   cattr_accessor :accessible_to_method do
     :is_accessible_to?
+  end
+
+  cattr_accessor :accessible_to_scope do
+    :accessible_to
   end
 
   # the diet uses ActionController::Base's
