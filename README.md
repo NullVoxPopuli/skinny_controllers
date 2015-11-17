@@ -20,4 +20,28 @@ or
 
 # Usage
 
-TODO: this section
+In a controller:
+
+```ruby
+include SkinnyControllers::Diet
+# ...
+# in your action
+render json: model
+```
+
+and that's it!
+
+The above does a multitude of assumptions to make sure that you can type the least amount code possible.
+
+1. Your controller name is based off your controller name
+2. Any defined policies or operations follow the formats:
+  - `Policy::#{Model.name}Policy`
+  - `Operations::#{Model.name}`
+3. Your model responds to `find`, and `where`
+4. Your model responds to `is_accessible_to?`. This can be changed at `SkinnyControllers.accessible_to_method`
+
+TODO: write a rake task that generates `app/policies` and `app/operations`.
+
+Policies can be placed in `app/policies` of your rails app.
+
+Operations can be placed in `app/operations` of your rails app.
