@@ -49,9 +49,11 @@ module SkinnyControllers
   cattr_accessor :action_map do
     {
       'default'.freeze => DefaultVerbs::Read,
-      'create'.freeze => DefaultVerbs::Create,
       'index'.freeze => DefaultVerbs::ReadAll,
       'destroy'.freeze => DefaultVerbs::Delete,
+      # these two are redundant, as the action will be
+      # converted to a verb via inflection
+      'create'.freeze => DefaultVerbs::Create,
       'update'.freeze => DefaultVerbs::Update
     }
   end
