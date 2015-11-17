@@ -15,6 +15,18 @@ require 'skinny_controllers/operation/default'
 require 'skinny_controllers/diet'
 require 'skinny_controllers/version'
 
+# load the policy and operation to the top level name space.
+# TODO: this might be horrible
+#   the problem here is that specify numerous namespaces to
+#   define policies and namespaces gets cumbersome.
+#   Maybe there is a way to wrap a namespace...
+#   Or maybe that's why Rails perfers suffixes on its objects
+#   e.g.: XController, XSerializer, XHelper, etc
+$LOAD_PATH.unshift Dir[File.dirname(__FILE__) + '/skinny_controllers/'].first
+
+# Object.const_set("Policy", SkinnyControllers::Policy)
+# Object.const_set("Operation", SkinnyControllers::Operation)
+
 module SkinnyControllers
   # Tells the Diet what namespace of the controller
   # isn't going to be part of the model name
