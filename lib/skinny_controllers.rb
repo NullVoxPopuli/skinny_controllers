@@ -8,6 +8,8 @@ require 'active_support/core_ext/string/inflections'
 # files for this gem
 require 'skinny_controllers/default_verbs'
 require 'skinny_controllers/policy/base'
+require 'skinny_controllers/operation/policy_helpers'
+require 'skinny_controllers/operation/model_helpers'
 require 'skinny_controllers/operation/base'
 require 'skinny_controllers/operation/default'
 require 'skinny_controllers/diet'
