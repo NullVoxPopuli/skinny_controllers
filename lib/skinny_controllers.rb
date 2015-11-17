@@ -26,11 +26,11 @@ module SkinnyControllers
   cattr_accessor :controller_namespace
 
   cattr_accessor :operations_suffix do
-    'Operations'
+    'Operations'.freeze
   end
 
   cattr_accessor :policy_suffix do
-    'Policy'
+    'Policy'.freeze
   end
 
   cattr_accessor :operations_namespace do

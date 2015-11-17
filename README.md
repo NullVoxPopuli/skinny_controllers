@@ -42,7 +42,7 @@ The above does a multitude of assumptions to make sure that you can type the lea
 3. Your model responds to `find`, and `where`
 4. Your model responds to `is_accessible_to?`. This can be changed at `SkinnyControllers.accessible_to_method`
 
-### Your model name is different from your resource name
+### Your model name might be different from your resource name
 Lets say you have a JSON API resource that you'd like to render that has some additional/subset of data.
 Maybe the model is an `Event`, and the resource an `EventSummary` (which could do some aggregation of `Event` data).
 
@@ -128,11 +128,14 @@ SkinnyControllers.controller_namespace = 'API'
 ```
 
 The following options are available:
- - `operations_namespace`
- - `operations_suffix`
- - `policy_suffix`
- - `controller_namespace` defaults to `''`
- - `allow_by_default` defaults to `true`
- - `accessible_to_method` defaults to `is_accessible_to?`
- - `accessible_to_scope` defaults to `accessible_to`
- - `action_map` see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)
+
+|Option|Default|Note|
+|------|-------|----|
+|`operations_namespace` | '' | Optional namespace to put all the operations in. |
+|`operations_suffix`|`'Operations'` | Default suffix for the operations namespaces. |
+|`policy_suffix`|`'Policy'`  | Default suffix for policies classes. |
+|`controller_namespace`|`''`| Global Namespace for all controllers (e.g.: `'API'`) |
+|`allow_by_default`| `true` | Default permission |
+|`accessible_to_method`|`is_accessible_to?`| method to call an the object that the user might be able to access |
+|`accessible_to_scope`| `accessible_to`| scope / class method on an object that the user might be able to access |
+|`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
