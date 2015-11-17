@@ -15,12 +15,6 @@ require 'skinny_controllers/operation/default'
 require 'skinny_controllers/diet'
 require 'skinny_controllers/version'
 
-# load the policies and operations to the top level name space.
-if defined? Rails
-  $LOAD_PATH.unshift Rails.root + '/app/operations'
-  $LOAD_PATH.unshift Rails.root + '/app/policies'
-end
-
 module SkinnyControllers
   # Tells the Diet what namespace of the controller
   # isn't going to be part of the model name
