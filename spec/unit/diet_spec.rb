@@ -28,7 +28,7 @@ describe SkinnyControllers::Diet do
   context :default_operation_class_for do
     it 'creates a namespace' do
       expect(defined? SkinnyControllers::Operation::SomeObject::Default).to be_falsey
-      result = some_controller.default_operation_class_for('SomeObject')
+      some_controller.default_operation_class_for('SomeObject')
       expect(defined? SkinnyControllers::Operation::SomeObject::Default).to be_truthy
     end
   end
@@ -43,13 +43,13 @@ describe SkinnyControllers::Diet do
 
     it 'creates a namespace' do
       expect(defined? SkinnyControllers::Operation::SomeObject).to be_falsey
-      result = some_controller.default_operation_namespace_for('SomeObject')
+      some_controller.default_operation_namespace_for('SomeObject')
       expect(defined? SkinnyControllers::Operation::SomeObject).to be_truthy
     end
   end
 
   context :operation do
-    let(:operation_class){ Operation::ExampleOperation::Read }
+    let(:operation_class) { Operation::ExampleOperation::Read }
     before(:each) do
       allow(example).to receive(:verb_for_action) { operation_class }
       allow(example).to receive(:verb_for_action) { SkinnyControllers::DefaultVerbs::Read }
@@ -81,7 +81,7 @@ describe SkinnyControllers::Diet do
 
   context :model do
     before(:each) do
-      allow(example).to receive(:params){ { id: 1 } }
+      allow(example).to receive(:params) { { id: 1 } }
     end
 
     context 'action is defined' do
@@ -148,7 +148,7 @@ describe SkinnyControllers::Diet do
 
   context :controller_name_prefix do
     it 'adds :: to the prefix' do
-      allow(SkinnyControllers).to receive(:controller_namespace){ 'API' }
+      allow(SkinnyControllers).to receive(:controller_namespace) { 'API' }
       prefix = controller.send(:controller_name_prefix)
 
       expect(prefix).to eq 'API::'

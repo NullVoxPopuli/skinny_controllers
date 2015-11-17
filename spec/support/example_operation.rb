@@ -1,7 +1,7 @@
 class ExampleOperation
   class << self
-    def find(*args)
-      self.new
+    def find(*_args)
+      new
     end
   end
 
