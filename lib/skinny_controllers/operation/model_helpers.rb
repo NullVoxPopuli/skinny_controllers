@@ -5,13 +5,14 @@ module SkinnyControllers
         # TODO: not sure if multiple ids is a good idea here
         # if we don't have a(ny) id(s), get all of them
         @model ||=
-          if id_from_params
-            model_from_id
-          elsif params[:scope]
+          if params[:scope]
             model_from_scope
           elsif (key = params.keys.grep(/\_id$/)).present?
             # hopefully there is only ever one of these passed
-            model_from_named_id(key.first)
+            id = params[key.first]
+            model_from_named_id(key.first, id)
+          elsif id_from_params
+            model_from_id
           else
             model_from_params
           end
@@ -47,8 +48,8 @@ module SkinnyControllers
         ar_proxy
       end
 
-      def model_from_named_id(key)
-        name, id = key.split('_')
+      def model_from_named_id(key, id)
+        name, _id = key.split('_')
         name = name.camelize
         model_from_scope(
           id: id,

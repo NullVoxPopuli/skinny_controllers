@@ -33,23 +33,3 @@ describe EventsController, type: :controller do
     end
   end
 end
-
-describe DiscountsController, type: :controller do
-  before(:each) do
-    load 'support/rails_app/db/schema.rb'
-    @event = create(:event)
-  end
-
-  it 'returns a list of discounts scoped to the event' do
-    discount = create(:discount, event: @event)
-
-    # TODO: how do we require the scope?
-    # -- authorize the parent, unauthorize the child
-    get :index, scope: { id: @event.id, type: @event.class.name }
-    json = JSON.parse(response.body)
-
-
-    expect(json.count).to eq 1
-    expect(json.first['id']).to eq discount.id
-  end
-end
