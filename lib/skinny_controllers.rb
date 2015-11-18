@@ -7,10 +7,11 @@ require 'active_support/core_ext/string/inflections'
 
 # files for this gem
 require 'skinny_controllers/default_verbs'
-require 'skinny_controllers/transform'
-require 'skinny_controllers/namespace'
+require 'skinny_controllers/lookup/controller'
+require 'skinny_controllers/lookup/model'
+require 'skinny_controllers/lookup/operation'
+require 'skinny_controllers/lookup/policy'
 require 'skinny_controllers/policy/base'
-require 'skinny_controllers/operation/policy_helpers'
 require 'skinny_controllers/operation/model_helpers'
 require 'skinny_controllers/operation/base'
 require 'skinny_controllers/operation/default'
@@ -18,6 +19,8 @@ require 'skinny_controllers/diet'
 require 'skinny_controllers/version'
 
 module SkinnyControllers
+  POLICY_METHOD_SUFFIX = '?'.freeze
+
   # Tells the Diet what namespace of the controller
   # isn't going to be part of the model name
   #

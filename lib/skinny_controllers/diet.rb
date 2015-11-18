@@ -18,7 +18,7 @@ module SkinnyControllers
     # @example SomeObjectsController => Operation::SomeObject::Action
     # @return [Class] the operation class for the model and verb
     def operation_class
-      ClassLookup.operation_from(self, verb_for_action, model_class)
+      Lookup::Operation.from_controller(self.class.name, verb_for_action, model_class)
     end
 
     # abstraction for `operation.run`

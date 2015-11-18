@@ -4,8 +4,6 @@ module SkinnyControllers
       def model
         # TODO: not sure if multiple ids is a good idea here
         # if we don't have a(ny) id(s), get all of them
-
-
         @model ||=
           if id_from_params
             model_from_id
@@ -27,8 +25,8 @@ module SkinnyControllers
       def scoped_model(scoped_params)
         unless @scoped_model
           klass_name = scoped_params[:type]
-          operation_name = operation_for(klass_name, 'Read'.freeze)
-          operation = operation_name.constantize.new(current_user, id: scoped_params[:id])
+          operation_class = Lookup::Operation.operation_of(klass_name, DefaultVerbs::Read)
+          operation = operation_class.new(current_user, id: scoped_params[:id])
           @scoped_model = operation.run
           self.authorized_via_parent = !!@scoped_model
         end
@@ -36,22 +34,13 @@ module SkinnyControllers
         @scoped_model
       end
 
-      def operation_for(klass_name, verb)
-        operations_class_namespace +
-        klass_name +
-        SkinnyControllers.operations_suffix +
-        "::#{verb}"
-      end
-
-      def operations_class_namespace
-        namespace = SkinnyControllers.policies_namespace
-        "#{namespace}::" if namespace
-      end
-
       def model_from_params
         ar_proxy = object_class.where(sanitized_params)
 
         if ar_proxy.respond_to? SkinnyControllers.accessible_to_scope
+          # It's better to filter in sql, than in the app, so if there is
+          # a way to do the filtering in active query, do that. This will help
+          # mitigate n+1 query scenarios
           return ar_proxy.accessible_to(current_user)
         end
 

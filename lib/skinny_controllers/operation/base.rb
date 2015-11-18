@@ -13,7 +13,6 @@ module SkinnyControllers
     #
     # TODO: make the above the 'default' and not require to be defined
     class Base
-      include PolicyHelpers
       include ModelHelpers
 
       attr_accessor :params, :current_user, :authorized_via_parent
@@ -41,15 +40,46 @@ module SkinnyControllers
       end
 
       def object_class
-        @object_class ||= ClassLookup.model_from_operation(self.class.name)
+        @object_class ||= Lookup::Model.class_from_operation(self.class.name)
       end
 
       def object_type_of_interest
-        @object_type_name ||= ClassLookup.operation_to_model_name(self.class.name)
+        @object_type_name ||= Lookup::Model.name_from_operation(self.class.name)
       end
 
       def association_name_from_object
         object_type_of_interest.tableize
+      end
+
+      # Takes the class name of self and converts it to a Policy class name
+      #
+      # @example In Operation::Event::Read, Policy::EventPolicy is returned
+      def policy_class
+        @policy_class ||= Lookup::Policy.class_from_model(object_type_of_interest)
+      end
+
+      # Converts the class name to the method name to call on the policy
+      #
+      # @example Operation::Event::Read would become read?
+      def policy_method_name
+        @policy_method_name ||= Lookup::Policy.method_name_for_operation(self.class.name)
+      end
+
+      # @return a new policy object and caches it
+      def policy_for(object)
+        @policy ||= policy_class.new(
+          current_user,
+          object,
+          authorized_via_parent: authorized_via_parent)
+      end
+
+      def allowed?
+        allowed_for?(model)
+      end
+
+      # checks the policy
+      def allowed_for?(object)
+        policy_for(object).send(policy_method_name)
       end
     end
   end
