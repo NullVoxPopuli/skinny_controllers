@@ -1,7 +1,12 @@
 Rails.application.routes.draw do
   resources :users
 
-  resources :events
+  resources :events do
+    collection do
+      get :throw_away
+      get :load_hack
+    end
+  end
 
   root 'users#index'
 

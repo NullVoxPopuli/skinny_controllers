@@ -19,4 +19,11 @@ class EventsController < ApplicationController
   def throw_away
     render json: model
   end
+
+  def load_hack
+    # go-go-gadget rails autoload
+    EventOperations
+    EventPolicy
+    render nothing: true
+  end
 end
