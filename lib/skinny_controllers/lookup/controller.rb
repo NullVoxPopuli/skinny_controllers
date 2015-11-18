@@ -3,7 +3,6 @@ module SkinnyControllers
     module Controller
       module_function
 
-
       # @example ObjectsController => Objects
       # @return [String] the resource name
       def resource_name(controller_name)

@@ -43,12 +43,10 @@ module SkinnyControllers
         namespace || Object.const_set(desired_namespace, Module.new)
       end
 
-
-
       # @example 'Object' => 'ObjectOperations'
       # @return [String] the operation namespace based on the model name
       def namespace_from_model(model_name)
-        "#{model_name}#{SkinnyControllers::operations_suffix}"
+        "#{model_name}#{SkinnyControllers.operations_suffix}"
       end
 
       # @example 'Model', 'Verb' => [optional namespace]::ModelOperations::Verb
@@ -62,7 +60,6 @@ module SkinnyControllers
         namespace = Lookup::Operation.namespace_from_model(model_name)
         "#{prefix}::#{namespace}::#{verb}"
       end
-
     end
   end
 end

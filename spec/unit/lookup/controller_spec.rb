@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe SkinnyControllers::Lookup::Controller do
-  let(:klass){ SkinnyControllers::Lookup::Controller }
+  let(:klass) { SkinnyControllers::Lookup::Controller }
 
   context :controller_name_to_resource_name do
     it 'removes controller' do

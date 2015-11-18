@@ -20,7 +20,6 @@ module SkinnyControllers
       def namespace
         SkinnyControllers.policies_namespace
       end
-
     end
   end
 end

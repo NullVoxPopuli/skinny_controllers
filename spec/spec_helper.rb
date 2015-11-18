@@ -9,7 +9,6 @@ ENV['CODECLIMATE_REPO_TOKEN'] = '9b1e2d38c6d07358eab4a8a1ad4846df8d7f34bfdb9dc3f
 require 'codeclimate-test-reporter'
 CodeClimate::TestReporter.start if ENV['TRAVIS']
 
-
 # This Gem
 require 'skinny_controllers'
 

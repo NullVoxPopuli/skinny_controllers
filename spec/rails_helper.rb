@@ -13,8 +13,7 @@ ActiveRecord::Migration.maintain_test_schema!
 # - cd spec/rails_app
 # - rake db:migrate
 ActiveRecord::Schema.verbose = false
-load "support/rails_app/db/schema.rb" # use db agnostic schema by default
-
+load 'support/rails_app/db/schema.rb' # use db agnostic schema by default
 
 require 'support/rails_app/factory_girl'
 # require 'support/rails_app/factories'

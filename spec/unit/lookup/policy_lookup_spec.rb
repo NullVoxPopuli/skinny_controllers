@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe SkinnyControllers::Lookup::Policy do
-  let(:klass){ SkinnyControllers::Lookup::Policy }
+  let(:klass) { SkinnyControllers::Lookup::Policy }
 
   context :class_from_model do
     it 'returns the policy class' do

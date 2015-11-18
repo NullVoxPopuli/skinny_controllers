@@ -3,20 +3,17 @@ module SkinnyControllers
     module Model
       module_function
 
-
       # @example 'ObjectOperations::Verb' => Object
       #
       # @return [Class] class based on the operation
       def class_from_operation(operation_name)
-
         # "Namespace::Model" => "Model"
         model_name = Model.name_from_operation(operation_name)
-        #object_type_of_interest.demodulize
+        # object_type_of_interest.demodulize
 
         # "Model" => Model
         model_name.constantize
       end
-
 
       # @example 'Namespace::ModelOperation::Verb' => 'Model'
       # @return [String] the model name corresponding to the operation
@@ -32,6 +29,5 @@ module SkinnyControllers
         nested_namespace.gsub(SkinnyControllers.operations_suffix, '')
       end
     end
-
   end
 end

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 describe EventsController, type: :controller do
   before(:each) do
-    load "support/rails_app/db/schema.rb"
+    load 'support/rails_app/db/schema.rb'
   end
 
   it 'returns an empty set of events' do
@@ -12,9 +12,9 @@ describe EventsController, type: :controller do
   end
 
   context 'events exist' do
-    let(:event1){create(:event)}
-    let(:event2){create(:event)}
-    let(:event3){create(:event)}
+    let(:event1) { create(:event) }
+    let(:event2) { create(:event) }
+    let(:event3) { create(:event) }
 
     it 'returns a list of events' do
       get :index
@@ -28,8 +28,8 @@ describe EventsController, type: :controller do
 
       json = JSON.parse(response.body)
       expect(json.count).to eq 2
-      expect(ids).to include(json.first["id"])
-      expect(ids).to include(json.last["id"])
+      expect(ids).to include(json.first['id'])
+      expect(ids).to include(json.last['id'])
     end
   end
 end

@@ -18,7 +18,7 @@ module SkinnyControllers
       attr_accessor :params, :current_user, :authorized_via_parent
 
       def self.run(current_user, params)
-        object = self.new(current_user, params)
+        object = new(current_user, params)
         object.run
       end
 

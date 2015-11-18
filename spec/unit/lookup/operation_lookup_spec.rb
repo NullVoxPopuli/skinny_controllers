@@ -1,18 +1,14 @@
 require 'spec_helper'
 
-
 describe SkinnyControllers::Lookup::Operation do
-  let(:klass){ SkinnyControllers::Lookup::Operation }
+  let(:klass) { SkinnyControllers::Lookup::Operation }
   context :model_name_to_operation_namespace do
-
   end
 
   context :operation_of do
-
   end
 
   context :from_controller do
-
   end
 
   context :default_operation_class_for do

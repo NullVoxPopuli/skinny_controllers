@@ -14,8 +14,8 @@ describe SkinnyControllers::Policy::Base do
   end
 
   context 'default access methods' do
-    let(:object){ Example.new }
-    let(:user){ TestUser.new }
+    let(:object) { Example.new }
+    let(:user) { TestUser.new }
 
     context :default? do
       it 'returns the default value' do
@@ -50,7 +50,5 @@ describe SkinnyControllers::Policy::Base do
         policy.read_all?
       end
     end
-
-
   end
 end
