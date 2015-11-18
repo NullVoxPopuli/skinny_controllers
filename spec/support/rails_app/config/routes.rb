@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :users
 
+  resources :discounts
   resources :events do
     collection do
       get :throw_away
