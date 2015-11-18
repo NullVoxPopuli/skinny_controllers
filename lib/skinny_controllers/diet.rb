@@ -16,7 +16,7 @@ module SkinnyControllers
     # Assumes the operation name from the controller name
     #
     # @example SomeObjectsController => Operation::SomeObject::Action
-    #
+    # @return [Class] the operation class for the model and verb
     def operation_class
       ClassLookup.operation_from(self, verb_for_action, model_class)
     end
@@ -25,6 +25,8 @@ module SkinnyControllers
     # useful when there is no logic needed for deciding what to
     # do with an operation or if there is no logic to decide which operation
     # to use
+    #
+    # @return [ActiveRecord::Base] the model
     def model
       @model ||= operation.run
     end

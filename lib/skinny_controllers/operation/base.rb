@@ -3,8 +3,8 @@ module SkinnyControllers
     #
     # An example Operation may looy like
     #
-    # module Operations
-    #   class Event::Read < Base
+    # module EventOperations
+    #   class Read < SkinnyControllers::Policy::Base
     #     def run
     #       model if allowed?
     #     end
@@ -41,29 +41,11 @@ module SkinnyControllers
       end
 
       def object_class
-        unless @object_class
-          # "Namespace::Model" => "Model"
-          model_name = object_type_of_interest.demodulize
-          # "Model" => Model
-          @object_class = model_name.constantize
-        end
-
-        @object_class
+        @object_class ||= ClassLookup.model_from_operation(self.class.name)
       end
 
       def object_type_of_interest
-        unless @object_type_name
-          # Namespace::ModelOperations::Verb
-          klass_name = self.class.name
-          # Namespace::ModelOperations::Verb => Namespace::ModelOperations
-          namespace = klass_name.deconstantize
-          # Namespace::ModelOperations => ModelOperations
-          nested_namespace = namespace.demodulize
-          # ModelOperations => Model
-          @object_type_name = nested_namespace.gsub(SkinnyControllers.operations_suffix, '')
-        end
-
-        @object_type_name
+        @object_type_name ||= ClassLookup.operation_to_model_name(self.class.name)
       end
 
       def association_name_from_object
