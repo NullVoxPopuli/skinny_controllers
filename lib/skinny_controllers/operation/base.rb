@@ -39,23 +39,23 @@ module SkinnyControllers
         @id_from_params
       end
 
-      def object_class
-        @object_class ||= Lookup::Model.class_from_operation(self.class.name)
+      def model_class
+        @model_class ||= Lookup::Model.class_from_operation(self.class.name)
       end
 
-      def object_type_of_interest
+      def model_name
         @object_type_name ||= Lookup::Model.name_from_operation(self.class.name)
       end
 
       def association_name_from_object
-        object_type_of_interest.tableize
+        model_name.tableize
       end
 
       # Takes the class name of self and converts it to a Policy class name
       #
       # @example In Operation::Event::Read, Policy::EventPolicy is returned
       def policy_class
-        @policy_class ||= Lookup::Policy.class_from_model(object_type_of_interest)
+        @policy_class ||= Lookup::Policy.class_from_model(model_name)
       end
 
       # Converts the class name to the method name to call on the policy

@@ -23,17 +23,17 @@ describe ExampleOperations::Read do
     end
   end
 
-  describe :object_class do
+  describe :model_class do
     it 'determines the object class' do
       op = klass.new(nil, nil)
-      expect(op.object_class).to eq Example
+      expect(op.model_class).to eq Example
     end
   end
 
-  describe :object_type_of_interest do
+  describe :model_name do
     it 'determines the object class name' do
       op = klass.new(nil, nil)
-      expect(op.object_type_of_interest).to eq Example.name
+      expect(op.model_name).to eq Example.name
     end
   end
 

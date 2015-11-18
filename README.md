@@ -56,7 +56,7 @@ In `EventSummariesController`, you would make the following additions:
 ```ruby
 class EventSummariesController < ApiController # or whatever your superclass is
   include SkinnyControllers::Diet
-  model_class = Event
+  self.model_class = Event
 
   def index
     render json: model, each_serializer: EventSummariesSerializer
@@ -139,3 +139,9 @@ The following options are available:
 |`accessible_to_method`|`is_accessible_to?`| method to call an the object that the user might be able to access |
 |`accessible_to_scope`| `accessible_to`| scope / class method on an object that the user might be able to access |
 |`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
+
+
+## TODO
+
+ - Configurable Error Renderer
+   - Default to JSON API format errors?

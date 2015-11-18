@@ -1,6 +1,5 @@
 require 'rails_helper'
 
-
 describe DiscountsController, type: :controller do
   before(:each) do
     load 'support/rails_app/db/schema.rb'

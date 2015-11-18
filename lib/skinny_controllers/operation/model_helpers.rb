@@ -19,7 +19,7 @@ module SkinnyControllers
       end
 
       def sanitized_params
-        keys = (object_class.column_names & params.keys)
+        keys = (model_class.column_names & params.keys)
         params.slice(*keys).symbolize_keys
       end
 
@@ -36,7 +36,7 @@ module SkinnyControllers
       end
 
       def model_from_params
-        ar_proxy = object_class.where(sanitized_params)
+        ar_proxy = model_class.where(sanitized_params)
 
         if ar_proxy.respond_to? SkinnyControllers.accessible_to_scope
           # It's better to filter in sql, than in the app, so if there is
@@ -67,7 +67,7 @@ module SkinnyControllers
       end
 
       def model_from_id
-        object_class.find(id_from_params)
+        model_class.find(id_from_params)
       end
     end
   end

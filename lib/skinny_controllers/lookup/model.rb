@@ -9,7 +9,7 @@ module SkinnyControllers
       def class_from_operation(operation_name)
         # "Namespace::Model" => "Model"
         model_name = Model.name_from_operation(operation_name)
-        # object_type_of_interest.demodulize
+        # model_name.demodulize
 
         # "Model" => Model
         model_name.constantize

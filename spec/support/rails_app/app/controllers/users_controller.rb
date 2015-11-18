@@ -1,8 +1,7 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: [:show, :edit, :update, :destroy]
+  include SkinnyControllers::Diet
 
-  # from Authorizable::Controller
-  before_action :is_authorized_for_action?
+  before_action :set_user, only: [:edit, :update, :destroy]
 
   # GET /users
   def index
@@ -11,6 +10,7 @@ class UsersController < ApplicationController
 
   # GET /users/1
   def show
+    render json: model
   end
 
   # GET /users/new
