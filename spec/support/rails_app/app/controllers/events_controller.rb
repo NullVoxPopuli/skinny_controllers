@@ -19,5 +19,4 @@ class EventsController < ApplicationController
   def throw_away
     render json: model
   end
-
 end

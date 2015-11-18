@@ -3,8 +3,8 @@ module SkinnyControllers
     #
     # An example Operation may looy like
     #
-    # module Operations
-    #   class Event::Read < Base
+    # module EventOperations
+    #   class Read < SkinnyControllers::Policy::Base
     #     def run
     #       model if allowed?
     #     end
@@ -13,13 +13,12 @@ module SkinnyControllers
     #
     # TODO: make the above the 'default' and not require to be defined
     class Base
-      include PolicyHelpers
       include ModelHelpers
 
       attr_accessor :params, :current_user, :authorized_via_parent
 
       def self.run(current_user, params)
-        object = self.new(current_user, params)
+        object = new(current_user, params)
         object.run
       end
 
@@ -41,33 +40,46 @@ module SkinnyControllers
       end
 
       def object_class
-        unless @object_class
-          # "Namespace::Model" => "Model"
-          model_name = object_type_of_interest.demodulize
-          # "Model" => Model
-          @object_class = model_name.constantize
-        end
-
-        @object_class
+        @object_class ||= Lookup::Model.class_from_operation(self.class.name)
       end
 
       def object_type_of_interest
-        unless @object_type_name
-          # Namespace::ModelOperations::Verb
-          klass_name = self.class.name
-          # Namespace::ModelOperations::Verb => Namespace::ModelOperations
-          namespace = klass_name.deconstantize
-          # Namespace::ModelOperations => ModelOperations
-          nested_namespace = namespace.demodulize
-          # ModelOperations => Model
-          @object_type_name = nested_namespace.gsub(SkinnyControllers.operations_suffix, '')
-        end
-
-        @object_type_name
+        @object_type_name ||= Lookup::Model.name_from_operation(self.class.name)
       end
 
       def association_name_from_object
         object_type_of_interest.tableize
+      end
+
+      # Takes the class name of self and converts it to a Policy class name
+      #
+      # @example In Operation::Event::Read, Policy::EventPolicy is returned
+      def policy_class
+        @policy_class ||= Lookup::Policy.class_from_model(object_type_of_interest)
+      end
+
+      # Converts the class name to the method name to call on the policy
+      #
+      # @example Operation::Event::Read would become read?
+      def policy_method_name
+        @policy_method_name ||= Lookup::Policy.method_name_for_operation(self.class.name)
+      end
+
+      # @return a new policy object and caches it
+      def policy_for(object)
+        @policy ||= policy_class.new(
+          current_user,
+          object,
+          authorized_via_parent: authorized_via_parent)
+      end
+
+      def allowed?
+        allowed_for?(model)
+      end
+
+      # checks the policy
+      def allowed_for?(object)
+        policy_for(object).send(policy_method_name)
       end
     end
   end

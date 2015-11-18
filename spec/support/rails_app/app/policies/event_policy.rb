@@ -1,7 +1,7 @@
 class EventPolicy < SkinnyControllers::Policy::Base
   def read?
-     # for testing, in real life, this is implicit, and
-     # the method does not even need to be defined
+    # for testing, in real life, this is implicit, and
+    # the method does not even need to be defined
     true
   end
 
