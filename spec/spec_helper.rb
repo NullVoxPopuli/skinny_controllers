@@ -5,9 +5,16 @@ require 'pry-byebug' # binding.pry to debug!
 require 'awesome_print'
 
 # Coverage
-ENV['CODECLIMATE_REPO_TOKEN'] = '9b1e2d38c6d07358eab4a8a1ad4846df8d7f34bfdb9dc3f885dfc4ca44c16e4c'
-require 'codeclimate-test-reporter'
-CodeClimate::TestReporter.start if ENV['TRAVIS']
+if ENV['TRAVIS']
+  ENV['CODECLIMATE_REPO_TOKEN'] = '9b1e2d38c6d07358eab4a8a1ad4846df8d7f34bfdb9dc3f885dfc4ca44c16e4c'
+  require 'codeclimate-test-reporter'
+  CodeClimate::TestReporter.start
+else
+  require 'simplecov'
+  SimpleCov.start do
+    add_filter '/spec/'
+  end
+end
 
 # This Gem
 require 'skinny_controllers'
