@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    skinny_controllers (0.3.3)
+    skinny_controllers (0.4.0)
       activesupport
 
 GEM

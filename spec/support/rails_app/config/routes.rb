@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
   resources :users
 
+  resources :strong_parameters
   resources :discounts
   resources :event_summaries
   resources :events do
