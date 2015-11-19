@@ -23,6 +23,19 @@ module SkinnyControllers
         params.slice(*keys).symbolize_keys
       end
 
+      # TODO:
+      #  - add a way to use existing strong parameters methods
+      def model_params
+        # for mass-assignment, rails doesn't accept
+        # stringified keys.
+        # TODO: why did the params hash lose its indifferent access
+        @model_params ||= params[model_param_name].symbolize_keys
+      end
+
+      def model_param_name
+        model_name.underscore
+      end
+
       def scoped_model(scoped_params)
         unless @scoped_model
           klass_name = scoped_params[:type]
@@ -42,7 +55,7 @@ module SkinnyControllers
           # It's better to filter in sql, than in the app, so if there is
           # a way to do the filtering in active query, do that. This will help
           # mitigate n+1 query scenarios
-          return ar_proxy.accessible_to(current_user)
+          return ar_proxy.send(SkinnyControllers.accessible_to_scope, current_user)
         end
 
         ar_proxy

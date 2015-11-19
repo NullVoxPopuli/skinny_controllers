@@ -47,6 +47,10 @@ module SkinnyControllers
         accessible.all?
       end
 
+      def delete?
+        read?
+      end
+
       private
 
       def accessible_method

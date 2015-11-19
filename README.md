@@ -11,6 +11,8 @@ The goal of this project is to help API apps be more slim, and separate logic as
 
 This gem is inspired by [trailblazer](https://github.com/apotonick/trailblazer), following similar patterns, yet allowing the structure of the rails app to not be entirely overhauled.
 
+Please note that this is a work in progress, and that the defaults are subject to change. If you have an idea or suggestion for improved defaults, please submit an issue or pull request. :-)
+
 # Installation
 
 ```ruby
@@ -37,10 +39,11 @@ The above does a multitude of assumptions to make sure that you can type the lea
 
 1. Your controller name is based off your model name (configurable per controller)
 2. Any defined policies or operations follow the formats (though they don't have to exist):
-  - `#{Model.name}Policy`
-  - `#{Model.name}Operations`
+  - `class #{Model.name}Policy`
+  - `module #{Model.name}Operations`
 3. Your model responds to `find`, and `where`
 4. Your model responds to `is_accessible_to?`. This can be changed at `SkinnyControllers.accessible_to_method`
+5. If relying on the default / implicit operations for create and update, the params key for your model's changes much be formatted as `{ Model.name.underscore => { attributes }}``
 
 ### Your model name might be different from your resource name
 Lets say you have a JSON API resource that you'd like to render that has some additional/subset of data.
@@ -103,6 +106,60 @@ module UserOperations
   end
 end
 ```
+
+### Creating
+
+To achieve default functionality, this operation *may* be defined -- though, it is implicitly assumed to function this way if not defined.
+```ruby
+module UserOperations
+  class Create < SkinnyControllers::Operation::Base
+    def run
+      return unless allowed?
+      @model = model_class.new(model_params)
+      @model.save
+      @model # or just `model`
+    end
+  end
+end
+```
+
+### Updating
+```ruby
+module UserOperations
+  class Create < SkinnyControllers::Operation::Base
+    def run
+      return unless allowed?
+      model.update(model_params)
+      model
+    end
+  end
+end
+```
+
+### Deleting
+
+Goal: Users should only be able to delete themselves
+
+To achieve default functionality, this operation *may* be defined -- though, it is implicitly assumed to function this way if not defined.
+```ruby
+module UserOperations
+  class Delete < SkinnyControllers::Operation::Base
+    def run
+      model.destroy if allowed?
+    end
+  end
+end
+```
+
+And given that this method exists on the `User` model:
+```ruby
+# realistically, you'd only want users to be able to access themselves
+def is_accessible_to?(user)
+  self.id == user.id
+end
+```
+
+Making a call to the destroy action on the `UsersController` will only succeed if the user trying to delete themselves. (Possibly to 'cancel their account')
 
 
 ## Defining Policies
