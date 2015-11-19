@@ -10,5 +10,4 @@ class UsersController < ApplicationController
   def destroy
     render json: model
   end
-
 end

@@ -3,6 +3,6 @@ class User < ActiveRecord::Base
 
   # realistically, you'd only want users to be able to access themselves
   def is_accessible_to?(user)
-    self.id == user.id
+    id == user.id
   end
 end

@@ -4,11 +4,11 @@ describe UsersController, type: :controller do
   context 'destroy with explicit destroy operation' do
     it 'is allowed' do
       user = create(:user)
-      allow(controller).to receive(:current_user){ user }
+      allow(controller).to receive(:current_user) { user }
 
-      expect{
+      expect do
         delete :destroy, id: user.id
-      }.to change(User, :count).by(-1)
+      end.to change(User, :count).by(-1)
     end
 
     it 'is not allowed' do
@@ -16,22 +16,21 @@ describe UsersController, type: :controller do
       user = create(:user)
 
       # set the current user
-      allow(controller).to receive(:current_user){ current_user }
+      allow(controller).to receive(:current_user) { current_user }
 
-      expect{
+      expect do
         delete :destroy, id: user.id
-      }.to change(User, :count).by(0)
+      end.to change(User, :count).by(0)
     end
   end
 end
 
 describe EventsController, type: :controller do
-
   context 'create' do
     it 'creates an event' do
-      expect{
+      expect do
         post :create, event: { name: 'created' }
-      }.to change(Event, :count).by(1)
+      end.to change(Event, :count).by(1)
 
       json = JSON.parse response.body
 
@@ -53,9 +52,9 @@ describe EventsController, type: :controller do
   context 'destroy' do
     it 'destroys an existing event' do
       event = create(:event)
-      expect{
+      expect do
         delete :destroy, id: event.id
-      }.to change(Event, :count).by(-1)
+      end.to change(Event, :count).by(-1)
     end
   end
 end

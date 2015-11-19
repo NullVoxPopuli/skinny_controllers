@@ -23,8 +23,7 @@ module SkinnyControllers
         params.slice(*keys).symbolize_keys
       end
 
-      # TODO:
-      #  - add a way to use existing strong parameters methods
+      # TODO: add a way to use existing strong parameters methods
       def model_params
         # for mass-assignment, rails doesn't accept
         # stringified keys.

@@ -12,5 +12,4 @@ describe EventSummariesController, type: :controller do
     json = JSON.parse(response.body)
     expect(json['id']).to eq event.id
   end
-
 end

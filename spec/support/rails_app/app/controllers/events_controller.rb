@@ -28,8 +28,11 @@ class EventsController < ApplicationController
 
   def load_hack
     # go-go-gadget rails autoload
+
+    # rubocop:disable Lint/Void
     EventOperations
     EventPolicy
+    # rubocop:enable Lint/Void
     render nothing: true
   end
 end

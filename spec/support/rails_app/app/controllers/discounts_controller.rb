@@ -14,5 +14,4 @@ class DiscountsController < ApplicationController
   def show
     render json: model
   end
-
 end

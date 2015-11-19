@@ -14,7 +14,6 @@ describe DiscountsController, type: :controller do
     get :index, scope: { id: @event.id, type: @event.class.name }
     json = JSON.parse(response.body)
 
-
     expect(json.count).to eq 1
     expect(json.first['id']).to eq discount.id
   end
@@ -47,7 +46,7 @@ describe DiscountsController, type: :controller do
       end
 
       it 'does not find the discount, because the event is wrong' do
-        discount = create(:discount, event: @event)
+        create(:discount, event: @event)
         wrong_event = create(:event)
         get :index, event_id: wrong_event.id
         json = JSON.parse(response.body)
@@ -55,6 +54,5 @@ describe DiscountsController, type: :controller do
         expect(json).to be_empty
       end
     end
-
   end
 end

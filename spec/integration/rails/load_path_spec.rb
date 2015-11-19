@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 describe 'definitions of operations and policies' do
-
-  # hack to get the environment loaded
+  # HACK: to get the environment loaded
   describe EventsController, type: :controller do
     before(:each) do
       get :load_hack
