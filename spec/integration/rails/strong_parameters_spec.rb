@@ -1,7 +1,6 @@
 require 'rails_helper'
 
 describe StrongParametersController, type: :controller do
-
   context '{model}_params' do
     it 'calls the model params' do
       expect(controller).to receive(:event_params).and_call_original
@@ -20,6 +19,5 @@ describe StrongParametersController, type: :controller do
   end
 
   context 'no strong parameters used' do
-
   end
 end
