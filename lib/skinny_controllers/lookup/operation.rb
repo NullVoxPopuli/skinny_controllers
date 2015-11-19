@@ -10,7 +10,8 @@ module SkinnyControllers
       # @return [Class] the operation based on the model name and the verb
       def operation_of(model_name, verb)
         klass_name = Lookup::Operation.name_from_model(model_name, verb)
-        klass_name.safe_constantize
+        klass = klass_name.safe_constantize
+        klass || default_operation_class_for(model_name)
       end
 
       # @param [String] controller name of the controller class
@@ -19,8 +20,7 @@ module SkinnyControllers
       # @return [Class] the class or default
       def from_controller(controller, verb, model_name = nil)
         model_name ||= Lookup::Controller.model_name(controller)
-        klass = operation_of(model_name, verb)
-        klass || default_operation_class_for(model_name)
+        operation_of(model_name, verb)
       end
 
       # dynamically creates a module for the model if it
