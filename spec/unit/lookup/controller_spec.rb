@@ -3,14 +3,21 @@ require 'spec_helper'
 describe SkinnyControllers::Lookup::Controller do
   let(:klass) { SkinnyControllers::Lookup::Controller }
 
-  context :controller_name_to_resource_name do
+  context :resource_name do
     it 'removes controller' do
       result = klass.resource_name('FakeObjectsController')
       expect(result).to eq 'FakeObjects'
     end
+
+    it 'ignores the namespace' do
+      SkinnyControllers.controller_namespace = 'API'
+      result = klass.resource_name('API::FakeObjectsController')
+      expect(result).to eq 'FakeObjects'
+      SkinnyControllers.controller_namespace = ''
+    end
   end
 
-  context :controller_to_model_name do
+  context :model_name do
     it 'resembles a class' do
       name = klass.model_name('FakeObjectsController')
       expect(name).to eq 'FakeObject'

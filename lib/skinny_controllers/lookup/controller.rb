@@ -6,7 +6,10 @@ module SkinnyControllers
       # @example ObjectsController => Objects
       # @return [String] the resource name
       def resource_name(controller_name)
-        controller_name.gsub('Controller', '')
+        name = controller_name.gsub('Controller', '')
+        # remove the namespace if one exists
+        name.slice! namespace
+        name
       end
 
       # @example <ObjectsContreller> => Object
@@ -14,10 +17,7 @@ module SkinnyControllers
       def model_name(controller)
         resource_name = Controller.resource_name(controller)
         # Convert Resources to Resource
-        object_name = resource_name.singularize
-        # remove the namespace if one exists
-        object_name.slice! namespace
-        object_name
+        resource_name.singularize
       end
 
       # TODO: add option to configure this per controller

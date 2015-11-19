@@ -37,7 +37,6 @@ module SkinnyControllers
       # @return [Class] namespace for the default operation class
       def default_operation_namespace_for(model_name)
         desired_namespace = namespace_from_model(model_name)
-
         parent_namespace = SkinnyControllers.operations_namespace
         namespace = "#{parent_namespace}::#{desired_namespace}".safe_constantize
         namespace || Object.const_set(desired_namespace, Module.new)
