@@ -44,6 +44,7 @@ The above does a multitude of assumptions to make sure that you can type the lea
 3. Your model responds to `find`, and `where`
 4. Your model responds to `is_accessible_to?`. This can be changed at `SkinnyControllers.accessible_to_method`
 5. If relying on the default / implicit operations for create and update, the params key for your model's changes much be formatted as `{ Model.name.underscore => { attributes }}``
+6. If using strong parameters, SkinnyControllers will look for `{action}_{model}_params` then `{model}_params` and then `params`. See the `strong_parameters_spec.rb` test to see an example.
 
 ### Your model name might be different from your resource name
 Lets say you have a JSON API resource that you'd like to render that has some additional/subset of data.
