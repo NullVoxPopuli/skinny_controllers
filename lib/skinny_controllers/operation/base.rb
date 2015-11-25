@@ -62,7 +62,13 @@ module SkinnyControllers
       #
       # @example Operation::Event::Read would become read?
       def policy_method_name
-        @policy_method_name ||= Lookup::Policy.method_name_for_operation(self.class.name)
+        unless @policy_method_name
+          method = Lookup::Policy.method_name_for_operation(self.class.name)
+          has_method = policy_class.instance_methods.include?(method.to_sym)
+          @policy_method_name = has_method ? method : 'default?'
+        end
+
+        @policy_method_name
       end
 
       # @return a new policy object and caches it

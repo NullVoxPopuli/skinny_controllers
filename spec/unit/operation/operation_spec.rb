@@ -49,6 +49,11 @@ describe ExampleOperations::Read do
       op = klass.new(nil, nil)
       expect(op.policy_method_name).to eq 'read?'
     end
+
+    it 'returns default if the inferred method is not defined' do
+      op = ExampleOperations::Update.new(nil,nil)
+      expect(op.policy_method_name).to eq 'default?'
+    end
   end
 
   describe :allowed_for? do
