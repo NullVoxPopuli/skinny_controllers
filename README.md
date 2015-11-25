@@ -79,20 +79,20 @@ Note that `each_serializer` and `serializer` is not part of `SkinnyControllers`,
 Sometimes, magic is scary. You can call anything you want manually (operations and policies).
 
 Here is an example that manually makes the call to the Host Operations and passes the subdomain parameter in to filter the `Host` object on the subdomain.
-```
-  def show
-    render json: host_from_subdomain, serializer: each_serializer
-  end
+```ruby
+def show
+  render json: host_from_subdomain, serializer: each_serializer
+end
 
-  private
+private
 
-  def host_from_subdomain
-    @host ||= HostOperations::Read.new(current_user, host_params).run
-  end
+def host_from_subdomain
+  @host ||= HostOperations::Read.new(current_user, host_params).run
+end
   
-  def host_params
-    params.permit(:subdomain)
-  end
+def host_params
+  params.permit(:subdomain)
+end
 ```
 
 ## Defining Operations
