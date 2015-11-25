@@ -73,6 +73,28 @@ end
 ```
 Note that `each_serializer` and `serializer` is not part of `SkinnyControllers`, and is part of [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers).
 
+
+### What if you want to call your own operations?
+
+Sometimes, magic is scary. You can call anything you want manually (operations and policies).
+
+Here is an example that manually makes the call to the Host Operations and passes the subdomain parameter in to filter the `Host` object on the subdomain.
+```
+  def show
+    render json: host_from_subdomain, serializer: each_serializer
+  end
+
+  private
+
+  def host_from_subdomain
+    @host ||= HostOperations::Read.new(current_user, host_params).run
+  end
+  
+  def host_params
+    params.permit(:subdomain)
+  end
+```
+
 ## Defining Operations
 
 Operations should be placed in `app/operations` of your rails app.
