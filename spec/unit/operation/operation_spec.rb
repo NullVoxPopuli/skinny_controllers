@@ -50,9 +50,10 @@ describe ExampleOperations::Read do
       expect(op.policy_method_name).to eq 'read?'
     end
 
-    it 'returns default if the inferred method is not defined' do
+    it 'derives the method name even if it does not exist on the policy' do
+      # it's the policies job to handle missing methods
       op = ExampleOperations::Update.new(nil,nil)
-      expect(op.policy_method_name).to eq 'default?'
+      expect(op.policy_method_name).to eq 'update?'
     end
   end
 

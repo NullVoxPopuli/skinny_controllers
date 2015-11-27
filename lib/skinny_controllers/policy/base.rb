@@ -14,6 +14,27 @@ module SkinnyControllers
         self.authorized_via_parent = authorized_via_parent
       end
 
+      # @param [Symbol] method_name
+      # @param [Array] args
+      # @param [Proc] block
+      def method_missing(method_name, *args, &block)
+        # if the method ends in a question mark, re-route to default
+        if method_name.to_s =~ /(.+)\?/
+          action = $1
+          # alias destroy to delete
+          # TODO: this means that a destroy method, if defined,
+          #       will never be called.... good or bad?
+          #       should there be a difference between delete and destroy?
+          return send('delete?'.freeze) if action == 'destroy'.freeze
+
+          # we know that these methods don't take any parameters,
+          # so args and block can be ignored
+          send(:default?)
+        else
+          super
+        end
+      end
+
       # if a method is not defined for a particular verb or action,
       # this will be used.
       #

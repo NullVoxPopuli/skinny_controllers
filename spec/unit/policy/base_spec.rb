@@ -13,6 +13,44 @@ describe SkinnyControllers::Policy::Base do
     end
   end
 
+  context 'method fallback' do
+    it 'defers update to default' do
+      b = klass.new(nil, nil)
+      expect(b).to receive(:default?)
+
+      b.update?
+    end
+
+    it 'defers delete to default' do
+      b = klass.new(nil, nil)
+      expect(b).to receive(:default?)
+
+      b.delete?
+    end
+
+    it 'defers destroy to delete' do
+      b = klass.new(nil, nil)
+      expect(b).to receive(:delete?)
+
+      b.destroy?
+    end
+
+    it 'defers create to default' do
+      b = klass.new(nil, nil)
+      expect(b).to receive(:default?)
+
+      b.create?
+    end
+
+    it 'does not defer a method not matching the method? pattern' do
+      b = klass.new(nil, nil)
+
+      expect{
+        b.wat
+      }.to raise_error
+    end
+  end
+
   context 'default access methods' do
     let(:object) { Example.new }
     let(:user) { TestUser.new }
