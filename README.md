@@ -1,4 +1,4 @@
-# skinny-controllers
+# skinny_controllers
 [![Gem Version](https://badge.fury.io/rb/skinny_controllers.svg)](https://badge.fury.io/rb/skinny_controllers)
 [![Build Status](https://travis-ci.org/NullVoxPopuli/skinny_controllers.svg?branch=master)](https://travis-ci.org/NullVoxPopuli/skinny_controllers)
 [![Code Climate](https://codeclimate.com/github/NullVoxPopuli/skinny_controllers/badges/gpa.svg)](https://codeclimate.com/github/NullVoxPopuli/skinny_controllers)
@@ -89,7 +89,7 @@ private
 def host_from_subdomain
   @host ||= HostOperations::Read.new(current_user, host_params).run
 end
-  
+
 def host_params
   params.permit(:subdomain)
 end
