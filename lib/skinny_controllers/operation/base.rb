@@ -30,7 +30,7 @@ module SkinnyControllers
 
       def id_from_params
         unless @id_from_params
-          @id_from_params = params[:id]
+          @id_from_params = params[:data] ? params[:data][:id] : params[:id]
           if filter = params[:filter]
             @id_from_params = filter[:id].split(',')
           end
