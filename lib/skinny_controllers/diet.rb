@@ -54,9 +54,9 @@ module SkinnyControllers
       action_params_method = "#{action_name}_#{model_key}_params"
       model_params_method = "#{model_key}_params"
 
-      if respond_to? action_params_method
+      if respond_to? action_params_method, true
         send(action_params_method)
-      elsif respond_to? model_params_method
+      elsif respond_to? model_params_method, true
         send(model_params_method)
       else
         params

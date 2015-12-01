@@ -33,7 +33,8 @@ describe JsonApiEventsController, type: :controller do
               "name" => new_name
             },
           "type" => "events"
-          }
+          },
+          format: 'json'
         }
 
         patch :update, json_api

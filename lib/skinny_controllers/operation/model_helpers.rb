@@ -28,7 +28,13 @@ module SkinnyControllers
         # for mass-assignment, rails doesn't accept
         # stringified keys.
         # TODO: why did the params hash lose its indifferent access
-        @model_params ||= (params_for_action[model_param_name] || params_for_action).symbolize_keys
+        unless @model_params
+          model_params = (params_for_action[model_param_name] || params_for_action)
+
+          @model_params = (model_params == params) ? {} : model_params.symbolize_keys
+        end
+
+        @model_params
       end
 
       def model_param_name
