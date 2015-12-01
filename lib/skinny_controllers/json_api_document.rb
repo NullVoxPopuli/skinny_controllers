@@ -10,7 +10,7 @@ module SkinnyControllers
       json = JSON.parse(json) if json.is_a?(String)
 
       self.data = json['data']
-      self.id = data['id']
+      self.id = json['id'] || data['id']
       self.attributes = format_keys(data['attributes'], key_formatter)
     end
 
@@ -20,7 +20,7 @@ module SkinnyControllers
     def format_keys(hash, key_format_method)
       return hash unless key_format_method
 
-      hash.each_with_object({}) do |(k, v), result|
+      hash.each_with_object({}) do | (k, v), result |
         new_key = k.send(key_format_method)
         result[new_key] = v
       end
