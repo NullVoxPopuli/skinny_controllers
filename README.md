@@ -149,7 +149,7 @@ end
 ### Updating
 ```ruby
 module UserOperations
-  class Create < SkinnyControllers::Operation::Base
+  class Update < SkinnyControllers::Operation::Base
     def run
       return unless allowed?
       model.update(model_params)
