@@ -7,9 +7,6 @@ require 'active_support/core_ext/string/inflections'
 
 # files for this gem
 require 'skinny_controllers/default_verbs'
-require 'skinny_controllers/json_api_document'
-require 'skinny_controllers/params/json'
-require 'skinny_controllers/params/json_api'
 require 'skinny_controllers/lookup/controller'
 require 'skinny_controllers/lookup/model'
 require 'skinny_controllers/lookup/operation'
@@ -62,10 +59,6 @@ module SkinnyControllers
 
   cattr_accessor :accessible_to_scope do
     :accessible_to
-  end
-
-  cattr_accessor :params_format do
-    :json # or :json_api
   end
 
   # the diet uses ActionController::Base's

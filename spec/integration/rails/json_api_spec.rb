@@ -1,29 +1,22 @@
 require 'rails_helper'
 
-describe EventsController, type: :controller do
+describe JsonApiEventsController, type: :controller do
+
   context 'JSON API Support' do
-    before(:each) do
-      SkinnyControllers.params_format = :json_api
-    end
-
-    after(:each) do
-      SkinnyControllers.params_format = :json
-    end
-
     context 'create / POST' do
       it 'creates a resource' do
         json_api = {
-          'data' => {
-            'attributes' => {
-              'name' => 'new_name'
+          "data" => {
+            "attributes" => {
+              "name" => 'new_name'
             },
-            'type' => 'events'
+          "type" => "events"
           }
         }
 
-        expect do
+        expect{
           post :create, json_api
-        end.to change(Event, :count).by(1)
+        }.to change(Event, :count).by(1)
       end
     end
 
@@ -34,12 +27,12 @@ describe EventsController, type: :controller do
 
         json_api = {
           id: event.id,
-          'data' => {
-            'id' => "#{event.id}",
-            'attributes' => {
-              'name' => new_name
+          "data" => {
+            "id" => "#{event.id}",
+            "attributes" => {
+              "name" => new_name
             },
-            'type' => 'events'
+          "type" => "events"
           }
         }
 
@@ -49,4 +42,5 @@ describe EventsController, type: :controller do
       end
     end
   end
+
 end

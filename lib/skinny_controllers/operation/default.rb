@@ -27,15 +27,15 @@ module SkinnyControllers
       private
 
       def creating?
-        params[:action] == 'create'
+        action == 'create'
       end
 
       def updating?
-        params[:action] == 'update'
+        action == 'update'
       end
 
       def destroying?
-        params[:action] == 'destroy'
+        action == 'destroy'
       end
     end
   end

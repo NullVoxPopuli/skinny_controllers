@@ -25,41 +25,41 @@ describe ExampleOperations::Read do
 
   describe :model_class do
     it 'determines the object class' do
-      op = klass.new(nil, nil)
+      op = klass.new(nil, {})
       expect(op.model_class).to eq Example
     end
   end
 
   describe :model_name do
     it 'determines the object class name' do
-      op = klass.new(nil, nil)
+      op = klass.new(nil, {})
       expect(op.model_name).to eq Example.name
     end
   end
 
   describe :policy_class do
     it 'derives the class for the policy' do
-      op = klass.new(nil, nil)
+      op = klass.new(nil, {})
       expect(op.policy_class).to eq ExamplePolicy
     end
   end
 
   describe :policy_method_name do
     it 'derives the policy name from the operation name' do
-      op = klass.new(nil, nil)
+      op = klass.new(nil, {})
       expect(op.policy_method_name).to eq 'read?'
     end
 
     it 'derives the method name even if it does not exist on the policy' do
       # it's the policies job to handle missing methods
-      op = ExampleOperations::Update.new(nil, nil)
+      op = ExampleOperations::Update.new(nil, {})
       expect(op.policy_method_name).to eq 'update?'
     end
   end
 
   describe :allowed_for? do
     it 'invokes the policy name' do
-      op = klass.new(nil, nil)
+      op = klass.new(nil, {})
       policy = ExamplePolicy.new(nil, nil)
 
       allow(op).to receive(:policy_for) { policy }

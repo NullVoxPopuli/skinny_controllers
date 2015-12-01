@@ -87,13 +87,33 @@ end
 private
 
 def host_from_subdomain
-  @host ||= HostOperations::Read.new(current_user, host_params).run
+  @host ||= HostOperations::Read.new(current_user, params, host_params).run
 end
 
 def host_params
   params.permit(:subdomain)
 end
 ```
+
+### For JSON-API
+
+Strong parameters must be used on create/update actions.
+
+Here is an example params method
+
+```ruby
+private
+
+def event_params
+  params
+    .require(:data)
+    .require(:attributes)
+    .permit(:name)
+end
+```
+
+Note that we don't need the id under the data hash, because in a RESTful api, the id will be available to us through the top level params hash.
+
 
 ## Defining Operations
 
@@ -219,7 +239,6 @@ The following options are available:
 |`accessible_to_method`|`is_accessible_to?`| method to call an the object that the user might be able to access |
 |`accessible_to_scope`| `accessible_to`| scope / class method on an object that the user might be able to access |
 |`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
-|`params_format`|`:json`| or `:json_api`|
 
 ## TODO
 

@@ -10,7 +10,7 @@ module SkinnyControllers
     #
     # @return an instance of the operation with default parameters
     def operation
-      @operation ||= operation_class.new(current_user, params_for_action)
+      @operation ||= operation_class.new(current_user, params, params_for_action, action_name)
     end
 
     # Assumes the operation name from the controller name

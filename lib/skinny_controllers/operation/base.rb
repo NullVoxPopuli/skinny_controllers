@@ -15,22 +15,28 @@ module SkinnyControllers
     class Base
       include ModelHelpers
 
-      attr_accessor :params, :current_user, :authorized_via_parent
+      attr_accessor :params, :current_user, :authorized_via_parent, :action, :params_for_action
 
       def self.run(current_user, params)
         object = new(current_user, params)
         object.run
       end
 
-      def initialize(current_user, params)
-        self.current_user = current_user
-        self.params = params
+      # @param [Model] current_user the logged in user
+      # @param [Hash] controller_params the params hash raw from the controller
+      # @param [Hash] params_for_action optional params hash, generally the result of strong parameters
+      # @param [string] action the current action on the controller
+      def initialize(current_user, controller_params, params_for_action = nil, action = nil)
         self.authorized_via_parent = false
+        self.current_user = current_user
+        self.action = action || controller_params[:action]
+        self.params = controller_params
+        self.params_for_action = params_for_action || controller_params
       end
 
       def id_from_params
         unless @id_from_params
-          @id_from_params = params[:data] ? params[:data][:id] : params[:id]
+          @id_from_params = params[:id]
           if filter = params[:filter]
             @id_from_params = filter[:id].split(',')
           end
