@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe SkinnyControllers::Policy::DenyAll do
   let(:klass) { SkinnyControllers::Policy::DenyAll }
-  let(:policy){ klass.new(nil, nil) }
+  let(:policy) { klass.new(nil, nil) }
 
   it { expect(policy.read?).to eq false }
   it { expect(policy.read_all?).to eq false }
@@ -14,7 +14,7 @@ end
 
 describe SkinnyControllers::Policy::AllowAll do
   let(:klass) { SkinnyControllers::Policy::AllowAll }
-  let(:policy){ klass.new(nil, nil) }
+  let(:policy) { klass.new(nil, nil) }
 
   it { expect(policy.read?).to eq true }
   it { expect(policy.read_all?).to eq true }

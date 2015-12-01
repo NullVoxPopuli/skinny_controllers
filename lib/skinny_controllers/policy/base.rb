@@ -20,7 +20,7 @@ module SkinnyControllers
       def method_missing(method_name, *args, &block)
         # if the method ends in a question mark, re-route to default
         if method_name.to_s =~ /(.+)\?/
-          action = $1
+          action = Regexp.last_match(1)
           # alias destroy to delete
           # TODO: this means that a destroy method, if defined,
           #       will never be called.... good or bad?

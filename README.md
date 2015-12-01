@@ -219,7 +219,7 @@ The following options are available:
 |`accessible_to_method`|`is_accessible_to?`| method to call an the object that the user might be able to access |
 |`accessible_to_scope`| `accessible_to`| scope / class method on an object that the user might be able to access |
 |`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
-
+|`params_format`|`:json`| or `:json_api`|
 
 ## TODO
 

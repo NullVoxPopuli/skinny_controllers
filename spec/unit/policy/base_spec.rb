@@ -45,9 +45,9 @@ describe SkinnyControllers::Policy::Base do
     it 'does not defer a method not matching the method? pattern' do
       b = klass.new(nil, nil)
 
-      expect{
+      expect do
         b.wat
-      }.to raise_error
+      end.to raise_error
     end
   end
 
