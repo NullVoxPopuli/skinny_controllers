@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en-us">
+  <head>
+    <meta charset="UTF-8">
+    <title>Skinny controllers by NullVoxPopuli</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
+    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
+    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
+  </head>
+  <body>
+    <section class="page-header">
+      <h1 class="project-name">Skinny controllers</h1>
+      <h2 class="project-tagline">An implementation of role-based policies and operations to help controllers lose weight.</h2>
+      <a href="https://github.com/NullVoxPopuli/skinny_controllers" class="btn">View on GitHub</a>
+      <a href="https://github.com/NullVoxPopuli/skinny_controllers/zipball/master" class="btn">Download .zip</a>
+      <a href="https://github.com/NullVoxPopuli/skinny_controllers/tarball/master" class="btn">Download .tar.gz</a>
+    </section>
+
+    <section class="main-content">
+      <h1>
+<a id="skinny_controllers" class="anchor" href="#skinny_controllers" aria-hidden="true"><span class="octicon octicon-link"></span></a>skinny_controllers</h1>
+
+<p><a href="https://badge.fury.io/rb/skinny_controllers"><img src="https://badge.fury.io/rb/skinny_controllers.svg" alt="Gem Version"></a>
+<a href="https://travis-ci.org/NullVoxPopuli/skinny_controllers"><img src="https://travis-ci.org/NullVoxPopuli/skinny_controllers.svg?branch=master" alt="Build Status"></a>
+<a href="https://codeclimate.com/github/NullVoxPopuli/skinny_controllers"><img src="https://codeclimate.com/github/NullVoxPopuli/skinny_controllers/badges/gpa.svg" alt="Code Climate"></a>
+<a href="https://codeclimate.com/github/NullVoxPopuli/skinny_controllers/coverage"><img src="https://codeclimate.com/github/NullVoxPopuli/skinny_controllers/badges/coverage.svg" alt="Test Coverage"></a>
+<a href="https://gemnasium.com/NullVoxPopuli/skinny_controllers"><img src="https://gemnasium.com/NullVoxPopuli/skinny_controllers.svg" alt="Dependency Status"></a></p>
+
+<p>An implementation of role-based policies and operations to help controllers lose weight.</p>
+
+<p>The goal of this project is to help API apps be more slim, and separate logic as much as possible.</p>
+
+<p>This gem is inspired by <a href="https://github.com/apotonick/trailblazer">trailblazer</a>, following similar patterns, yet allowing the structure of the rails app to not be entirely overhauled.</p>
+
+<p>Please note that this is a work in progress, and that the defaults are subject to change. If you have an idea or suggestion for improved defaults, please submit an issue or pull request. :-)</p>
+
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">gem</span> <span class="pl-s"><span class="pl-pds">'</span>skinny_controllers<span class="pl-pds">'</span></span></pre></div>
+
+<p>or</p>
+
+<p><code>gem install skinny_controllers</code></p>
+
+<h1>
+<a id="usage" class="anchor" href="#usage" aria-hidden="true"><span class="octicon octicon-link"></span></a>Usage</h1>
+
+<h2>
+<a id="in-a-controller" class="anchor" href="#in-a-controller" aria-hidden="true"><span class="octicon octicon-link"></span></a>In a controller:</h2>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">include</span> <span class="pl-c1">SkinnyControllers</span>::<span class="pl-c1">Diet</span>
+<span class="pl-c"># ...</span>
+<span class="pl-c"># in your action</span>
+render <span class="pl-c1">json:</span> model</pre></div>
+
+<p>and that's it!</p>
+
+<p>The above does a multitude of assumptions to make sure that you can type the least amount code possible.</p>
+
+<ol>
+<li>Your controller name is based off your model name (configurable per controller)</li>
+<li>Any defined policies or operations follow the formats (though they don't have to exist):
+
+<ul>
+<li><code>class #{Model.name}Policy</code></li>
+<li><code>module #{Model.name}Operations</code></li>
+</ul>
+</li>
+<li>Your model responds to <code>find</code>, and <code>where</code>
+</li>
+<li>Your model responds to <code>is_accessible_to?</code>. This can be changed at <code>SkinnyControllers.accessible_to_method</code>
+</li>
+<li>If relying on the default / implicit operations for create and update, the params key for your model's changes much be formatted as <code>{ Model.name.underscore =&gt; { attributes }}</code>`</li>
+<li>If using strong parameters, SkinnyControllers will look for <code>{action}_{model}_params</code> then <code>{model}_params</code> and then <code>params</code>. See the <code>strong_parameters_spec.rb</code> test to see an example.</li>
+</ol>
+
+<h3>
+<a id="your-model-name-might-be-different-from-your-resource-name" class="anchor" href="#your-model-name-might-be-different-from-your-resource-name" aria-hidden="true"><span class="octicon octicon-link"></span></a>Your model name might be different from your resource name</h3>
+
+<p>Lets say you have a JSON API resource that you'd like to render that has some additional/subset of data.
+Maybe the model is an <code>Event</code>, and the resource an <code>EventSummary</code> (which could do some aggregation of <code>Event</code> data).</p>
+
+<p>The naming of all the objects should be as follows:</p>
+
+<ul>
+<li><code>EventSummariesController</code></li>
+<li><code>EventSummaryOperations::*</code></li>
+<li><code>EventSummaryPolicy</code></li>
+<li>and the model is still <code>Event</code>
+</li>
+</ul>
+
+<p>In <code>EventSummariesController</code>, you would make the following additions:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">class</span> <span class="pl-en">EventSummariesController<span class="pl-e"> &lt; ApiController</span></span> <span class="pl-c"># or whatever your superclass is</span>
+  <span class="pl-k">include</span> <span class="pl-c1">SkinnyControllers</span>::<span class="pl-c1">Diet</span>
+  <span class="pl-v">self</span>.model_class <span class="pl-k">=</span> <span class="pl-c1">Event</span>
+
+  <span class="pl-k">def</span> <span class="pl-en">index</span>
+    render <span class="pl-c1">json:</span> model, <span class="pl-c1">each_serializer:</span> <span class="pl-c1">EventSummariesSerializer</span>
+  <span class="pl-k">end</span>
+
+  <span class="pl-k">def</span> <span class="pl-en">show</span>
+    render <span class="pl-c1">json:</span> model, <span class="pl-c1">serializer:</span> <span class="pl-c1">EventSummariesSerializer</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<p>Note that <code>each_serializer</code> and <code>serializer</code> is not part of <code>SkinnyControllers</code>, and is part of <a href="https://github.com/rails-api/active_model_serializers">ActiveModel::Serializers</a>.</p>
+
+<h3>
+<a id="what-if-you-want-to-call-your-own-operations" class="anchor" href="#what-if-you-want-to-call-your-own-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>What if you want to call your own operations?</h3>
+
+<p>Sometimes, magic is scary. You can call anything you want manually (operations and policies).</p>
+
+<p>Here is an example that manually makes the call to the Host Operations and passes the subdomain parameter in to filter the <code>Host</code> object on the subdomain.</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">def</span> <span class="pl-en">show</span>
+  render <span class="pl-c1">json:</span> host_from_subdomain, <span class="pl-c1">serializer:</span> each_serializer
+<span class="pl-k">end</span>
+
+<span class="pl-k">private</span>
+
+<span class="pl-k">def</span> <span class="pl-en">host_from_subdomain</span>
+  <span class="pl-smi">@host</span> <span class="pl-k">||=</span> <span class="pl-c1">HostOperations</span>::<span class="pl-c1">Read</span>.<span class="pl-k">new</span>(current_user, params, host_params).run
+<span class="pl-k">end</span>
+
+<span class="pl-k">def</span> <span class="pl-en">host_params</span>
+  params.permit(<span class="pl-c1">:subdomain</span>)
+<span class="pl-k">end</span></pre></div>
+
+<h3>
+<a id="for-json-api" class="anchor" href="#for-json-api" aria-hidden="true"><span class="octicon octicon-link"></span></a>For JSON-API</h3>
+
+<p>Strong parameters must be used on create/update actions.</p>
+
+<p>Here is an example params method</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">private</span>
+
+<span class="pl-k">def</span> <span class="pl-en">event_params</span>
+  params
+    .<span class="pl-k">require</span>(<span class="pl-c1">:data</span>)
+    .<span class="pl-k">require</span>(<span class="pl-c1">:attributes</span>)
+    .permit(<span class="pl-c1">:name</span>)
+<span class="pl-k">end</span></pre></div>
+
+<p>Note that we don't need the id under the data hash, because in a RESTful api, the id will be available to us through the top level params hash.</p>
+
+<h2>
+<a id="defining-operations" class="anchor" href="#defining-operations" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defining Operations</h2>
+
+<p>Operations should be placed in <code>app/operations</code> of your rails app.</p>
+
+<p>For operations concerning an <code>Event</code>, they should be under <code>app/operations/event_operations/</code>.</p>
+
+<p>Using the example from the specs:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">module</span> <span class="pl-en">EventOperations</span>
+  <span class="pl-k">class</span> <span class="pl-en">Read<span class="pl-e"> &lt; SkinnyControllers::Operation::Base</span></span>
+    <span class="pl-k">def</span> <span class="pl-en">run</span>
+      model <span class="pl-k">if</span> allowed?
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<p>alternatively, all operation verbs can be stored in the same file under (for example) <code>app/operations/user_operations.rb</code></p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">module</span> <span class="pl-en">UserOperations</span>
+  <span class="pl-k">class</span> <span class="pl-en">Read<span class="pl-e"> &lt; SkinnyControllers::Operation::Base</span></span>
+    <span class="pl-k">def</span> <span class="pl-en">run</span>
+      model <span class="pl-k">if</span> allowed?
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+
+  <span class="pl-k">class</span> <span class="pl-en">ReadAll<span class="pl-e"> &lt; SkinnyControllers::Operation::Base</span></span>
+    <span class="pl-k">def</span> <span class="pl-en">run</span>
+      model <span class="pl-k">if</span> allowed?
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<h3>
+<a id="creating" class="anchor" href="#creating" aria-hidden="true"><span class="octicon octicon-link"></span></a>Creating</h3>
+
+<p>To achieve default functionality, this operation <em>may</em> be defined -- though, it is implicitly assumed to function this way if not defined.</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">module</span> <span class="pl-en">UserOperations</span>
+  <span class="pl-k">class</span> <span class="pl-en">Create<span class="pl-e"> &lt; SkinnyControllers::Operation::Base</span></span>
+    <span class="pl-k">def</span> <span class="pl-en">run</span>
+      <span class="pl-k">return</span> <span class="pl-k">unless</span> allowed?
+      <span class="pl-smi">@model</span> <span class="pl-k">=</span> model_class.<span class="pl-k">new</span>(model_params)
+      <span class="pl-smi">@model</span>.save
+      <span class="pl-smi">@model</span> <span class="pl-c"># or just `model`</span>
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<h3>
+<a id="updating" class="anchor" href="#updating" aria-hidden="true"><span class="octicon octicon-link"></span></a>Updating</h3>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">module</span> <span class="pl-en">UserOperations</span>
+  <span class="pl-k">class</span> <span class="pl-en">Update<span class="pl-e"> &lt; SkinnyControllers::Operation::Base</span></span>
+    <span class="pl-k">def</span> <span class="pl-en">run</span>
+      <span class="pl-k">return</span> <span class="pl-k">unless</span> allowed?
+      model.update(model_params)
+      model
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<h3>
+<a id="deleting" class="anchor" href="#deleting" aria-hidden="true"><span class="octicon octicon-link"></span></a>Deleting</h3>
+
+<p>Goal: Users should only be able to delete themselves</p>
+
+<p>To achieve default functionality, this operation <em>may</em> be defined -- though, it is implicitly assumed to function this way if not defined.</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">module</span> <span class="pl-en">UserOperations</span>
+  <span class="pl-k">class</span> <span class="pl-en">Delete<span class="pl-e"> &lt; SkinnyControllers::Operation::Base</span></span>
+    <span class="pl-k">def</span> <span class="pl-en">run</span>
+      model.destroy <span class="pl-k">if</span> allowed?
+    <span class="pl-k">end</span>
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<p>And given that this method exists on the <code>User</code> model:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c"># realistically, you'd only want users to be able to access themselves</span>
+<span class="pl-k">def</span> <span class="pl-en">is_accessible_to?</span>(<span class="pl-smi">user</span>)
+  <span class="pl-v">self</span>.id <span class="pl-k">==</span> user.id
+<span class="pl-k">end</span></pre></div>
+
+<p>Making a call to the destroy action on the <code>UsersController</code> will only succeed if the user trying to delete themselves. (Possibly to 'cancel their account')</p>
+
+<h2>
+<a id="defining-policies" class="anchor" href="#defining-policies" aria-hidden="true"><span class="octicon octicon-link"></span></a>Defining Policies</h2>
+
+<p>Policies should be placed in <code>app/policies</code> of your rails app.
+These are where you define your access logic, and how to decide if a user has access to the <code>object</code></p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-k">class</span> <span class="pl-en">EventPolicy<span class="pl-e"> &lt; SkinnyControllers::Policy::Base</span></span>
+  <span class="pl-k">def</span> <span class="pl-en">read?</span>(<span class="pl-smi">o</span> <span class="pl-k">=</span> object)
+    o.is_accessible_to?(user)
+  <span class="pl-k">end</span>
+<span class="pl-k">end</span></pre></div>
+
+<h2>
+<a id="globally-configurable-options" class="anchor" href="#globally-configurable-options" aria-hidden="true"><span class="octicon octicon-link"></span></a>Globally Configurable Options</h2>
+
+<p>All of these can be set on <code>SkinnyControllers</code>,
+e.g.:</p>
+
+<div class="highlight highlight-source-ruby"><pre><span class="pl-c1">SkinnyControllers</span>.controller_namespace <span class="pl-k">=</span> <span class="pl-s"><span class="pl-pds">'</span>API<span class="pl-pds">'</span></span></pre></div>
+
+<p>The following options are available:</p>
+
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Default</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>operations_namespace</code></td>
+<td>''</td>
+<td>Optional namespace to put all the operations in.</td>
+</tr>
+<tr>
+<td><code>operations_suffix</code></td>
+<td><code>'Operations'</code></td>
+<td>Default suffix for the operations namespaces.</td>
+</tr>
+<tr>
+<td><code>policy_suffix</code></td>
+<td><code>'Policy'</code></td>
+<td>Default suffix for policies classes.</td>
+</tr>
+<tr>
+<td><code>controller_namespace</code></td>
+<td><code>''</code></td>
+<td>Global Namespace for all controllers (e.g.: <code>'API'</code>)</td>
+</tr>
+<tr>
+<td><code>allow_by_default</code></td>
+<td><code>true</code></td>
+<td>Default permission</td>
+</tr>
+<tr>
+<td><code>accessible_to_method</code></td>
+<td><code>is_accessible_to?</code></td>
+<td>method to call an the object that the user might be able to access</td>
+</tr>
+<tr>
+<td><code>accessible_to_scope</code></td>
+<td><code>accessible_to</code></td>
+<td>scope / class method on an object that the user might be able to access</td>
+</tr>
+<tr>
+<td><code>action_map</code></td>
+<td>see <a href="./lib/skinny_controllers.rb#L61">skinny_controllers.rb</a>
+</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+
+<h2>
+<a id="todo" class="anchor" href="#todo" aria-hidden="true"><span class="octicon octicon-link"></span></a>TODO</h2>
+
+<ul>
+<li>Configurable Error Renderer
+
+<ul>
+<li>Default to JSON API format errors?</li>
+</ul>
+</li>
+</ul>
+
+      <footer class="site-footer">
+        <span class="site-footer-owner"><a href="https://github.com/NullVoxPopuli/skinny_controllers">Skinny controllers</a> is maintained by <a href="https://github.com/NullVoxPopuli">NullVoxPopuli</a>.</span>
+
+        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
+      </footer>
+
+    </section>
+
+  
+  </body>
+</html>
