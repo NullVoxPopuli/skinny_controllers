@@ -9,7 +9,8 @@ class RequiresParentController < ApplicationController
   end
 
   def show
-    render json: model
+    model = operation_class.new(current_user, params, index_params).run
+    render json: model, include: params[:include]
   end
 
   private
@@ -17,5 +18,10 @@ class RequiresParentController < ApplicationController
   def index_params
     params.require(:event_id)
   end
+
+  def show_params
+    params.require(:event_id)
+  end
+
 
 end

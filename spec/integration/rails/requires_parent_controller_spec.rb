@@ -30,6 +30,15 @@ describe RequiresParentController, type: :controller do
       expect(json).to_not eq(notthis)
       expect(json.first['id']).to eq discount.id
     end
+
+    it 'requires the parent id' do
+      event = create(:event)
+      discount = create(:discount, event: event)
+
+      expect{
+        get :index
+      }.to raise_error
+    end
   end
 
   context 'show' do
@@ -53,6 +62,15 @@ describe RequiresParentController, type: :controller do
 
       json = JSON.parse(response.body)
       expect(json.first['id']).to_not eq notthis.id
+    end
+
+    it 'requires the parent id' do
+      event = create(:event)
+      discount = create(:discount, event: event)
+
+      expect{
+        get :show, id: discount.id
+      }.to raise_error
     end
   end
 
