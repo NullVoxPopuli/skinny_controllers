@@ -4,18 +4,29 @@ module SkinnyControllers
       def model
         # TODO: not sure if multiple ids is a good idea here
         # if we don't have a(ny) id(s), get all of them
-        @model ||=
-          if params[:scope]
-            model_from_scope
-          elsif (key = params.keys.grep(/\_id$/)).present?
-            # hopefully there is only ever one of these passed
-            id = params[key.first]
-            model_from_named_id(key.first, id)
-          elsif id_from_params
-            model_from_id
+        @model ||= find_model
+      end
+
+      # hopefully this method is only ever called once per request
+      # via the memoization in #model
+      def find_model
+        if params[:scope]
+          model_from_scope
+        elsif (key = params.keys.grep(/\_id$/)).present?
+          # hopefully there is only ever one of these passed
+          id = params[key.first]
+          if params['id'].present?
+            # single item / show
+            model_from_parent(key.first, id, params['id'])
           else
-            model_from_params
+            # list of items / index
+            model_from_named_id(key.first, id)
           end
+        elsif id_from_params
+          model_from_id
+        else
+          model_from_params
+        end
       end
 
       def sanitized_params
@@ -41,6 +52,9 @@ module SkinnyControllers
         model_name.underscore
       end
 
+      # @param [Hash] scoped_params
+      # @option scoped_params :type the class name
+      # @option scoped_params :id the id of the class to look up
       def scoped_model(scoped_params)
         unless @scoped_model
           klass_name = scoped_params[:type]
@@ -82,6 +96,11 @@ module SkinnyControllers
         else
           fail "Parent object of type #{scope[:type]} not accessible"
         end
+      end
+
+      def model_from_parent(parent_class, parent_id, id)
+        association = model_from_named_id(parent_class, parent_id)
+        association.find(id)
       end
 
       def model_from_id

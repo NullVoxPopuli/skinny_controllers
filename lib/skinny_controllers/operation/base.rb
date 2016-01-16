@@ -4,7 +4,7 @@ module SkinnyControllers
     # An example Operation may looy like
     #
     # module EventOperations
-    #   class Read < SkinnyControllers::Policy::Base
+    #   class Read < SkinnyControllers::Operation::Base
     #     def run
     #       model if allowed?
     #     end

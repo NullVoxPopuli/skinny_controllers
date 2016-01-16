@@ -50,7 +50,7 @@ describe RequiresParentController, type: :controller do
       get :show, id: discount.id, event_id: event.id
 
       json = JSON.parse(response.body)
-      expect(json.first['id']).to eq discount.id
+      expect(json['id']).to eq discount.id
     end
 
     it 'does not retrieve a discount from another event' do
@@ -61,7 +61,7 @@ describe RequiresParentController, type: :controller do
       get :show, id: discount.id, event_id: event.id
 
       json = JSON.parse(response.body)
-      expect(json.first['id']).to_not eq notthis.id
+      expect(json['id']).to_not eq notthis.id
     end
 
     it 'requires the parent id' do
@@ -71,6 +71,17 @@ describe RequiresParentController, type: :controller do
       expect{
         get :show, id: discount.id
       }.to raise_error
+    end
+
+    it 'returns only the requested event' do
+      event = create(:event)
+      create(:discount, event: event)
+      discount = create(:discount, event: event)
+
+      get :show, id: discount.id, event_id: event.id
+
+      json = JSON.parse(response.body)
+      expect(json['id']).to eq discount.id
     end
   end
 
