@@ -43,6 +43,8 @@ module SkinnyControllers
     #
     # @return the whitelisted strong parameters object
     def params_for_action
+      return {} if action_name == 'destroy'
+
       model_key =
         if model_class
           # model_class should be a class
