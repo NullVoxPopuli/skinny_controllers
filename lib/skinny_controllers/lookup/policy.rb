@@ -18,7 +18,22 @@ module SkinnyControllers
 
       def define_policy_class(name)
         default_policy = SkinnyControllers::Policy::Default
-        Object.const_set(name, default_policy.dup)
+        namespace_klass = Object
+        # if we are namespaced, we need to get / create the namespace if it doesn't exist already
+        if (name.include?('::'))
+          namespaces = name.split('::')
+          namespace = namespaces[0..-2].join('::').presence
+          namespace = namespace == name ? 'Object' : namespace
+          if (namespace.presence && namespace != name )
+            namespace_klass = Namespace.create_namespace(namespace)
+          end
+        end
+
+        # naw remove the namespace from the name
+        name = name.gsub(namespace_klass.name + '::', '')
+
+        # finally, define the new policy class
+        namespace_klass.const_set(name, default_policy.dup)
       end
 
       # @param [String] class_name name of the operation class

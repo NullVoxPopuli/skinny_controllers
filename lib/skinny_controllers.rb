@@ -7,6 +7,7 @@ require 'active_support/core_ext/string/inflections'
 
 # files for this gem
 require 'skinny_controllers/default_verbs'
+require 'skinny_controllers/lookup/namespace'
 require 'skinny_controllers/lookup/controller'
 require 'skinny_controllers/lookup/model'
 require 'skinny_controllers/lookup/operation'

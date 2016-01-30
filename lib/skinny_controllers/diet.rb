@@ -4,13 +4,17 @@ module SkinnyControllers
 
     included do
       cattr_accessor :model_class
+      cattr_accessor :model_key
     end
 
     # TODO: what if we want multiple operations per action?
     #
     # @return an instance of the operation with default parameters
     def operation
-      @operation ||= operation_class.new(current_user, params, params_for_action, action_name)
+      @operation ||= operation_class.new(
+        current_user,
+        params, params_for_action,
+        action_name, model_key)
     end
 
     # Assumes the operation name from the controller name
@@ -46,7 +50,9 @@ module SkinnyControllers
       return {} if action_name == 'destroy'
 
       model_key =
-        if model_class
+        if self.model_key.present?
+          self.model_key
+        elsif model_class
           # model_class should be a class
           model_class.name.underscore
         else

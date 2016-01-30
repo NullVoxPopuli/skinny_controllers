@@ -11,17 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150104171110) do
-
-  create_table "collaborations", force: :cascade do |t|
-    t.integer  "user_id"
-    t.integer  "event_id"
-    t.string   "title"
-    t.text     "permissions"
-    t.datetime "deleted_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
+ActiveRecord::Schema.define(version: 20160130125056) do
 
   create_table "discounts", force: :cascade do |t|
     t.string   "name"
@@ -35,6 +25,11 @@ ActiveRecord::Schema.define(version: 20150104171110) do
     t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "super_items", force: :cascade do |t|
+    t.string "item_type"
+    t.string "name"
   end
 
   create_table "users", force: :cascade do |t|

@@ -74,6 +74,21 @@ end
 Note that `each_serializer` and `serializer` is not part of `SkinnyControllers`, and is part of [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers).
 
 
+### What if your model is namespaced?
+
+All you have to do is set the `model_class`, and `model_key`.
+
+```ruby
+class ItemsController < ApiController # or whatever your superclass is
+  include SkinnyControllers::Diet
+  self.model_class = NameSpace::Item
+  self.model_key = 'item'
+end
+```
+`model_key` specifies the key to look for params when creating / updating the model.
+
+Note that while `model_key` doesn't *have* to be specified, it would default to name_space/item. So, just keep that in mind.  
+
 ### What if you want to call your own operations?
 
 Sometimes, magic is scary. You can call anything you want manually (operations and policies).

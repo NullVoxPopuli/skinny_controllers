@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   resources :event_summaries
   resources :json_api_events
   resources :requires_parent
+  resources :items
   resources :events do
     collection do
       get :throw_away

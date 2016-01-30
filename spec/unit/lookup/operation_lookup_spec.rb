@@ -6,6 +6,7 @@ describe SkinnyControllers::Lookup::Operation do
   end
 
   context :operation_of do
+
   end
 
   context :from_controller do

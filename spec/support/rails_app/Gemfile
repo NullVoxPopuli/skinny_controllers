@@ -1,0 +1,6 @@
+source 'https://rubygems.org'
+
+# this file is pretty much only used for adding migrations
+gem 'rails'
+gem 'skinny_controllers'
+gem 'sqlite3'

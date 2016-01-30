@@ -49,7 +49,8 @@ module SkinnyControllers
       end
 
       def model_param_name
-        model_name.underscore
+        # model_key comes from Operation::Base
+        self.model_key || model_name.underscore
       end
 
       # @param [Hash] scoped_params
