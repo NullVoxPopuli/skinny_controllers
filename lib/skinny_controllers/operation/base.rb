@@ -54,8 +54,13 @@ module SkinnyControllers
         @object_type_name ||= Lookup::Model.name_from_operation(self.class.name)
       end
 
+      # @example model_name == Namespace::Item
+      #  -> model_name.tableize == namespace/items
+      #  -> split.last == items
+      #
+      # TODO: maybe make this configurable?
       def association_name_from_object
-        model_name.tableize
+        model_name.tableize.split('/').last
       end
 
       # Takes the class name of self and converts it to a Policy class name

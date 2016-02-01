@@ -82,7 +82,7 @@ module SkinnyControllers
       end
 
       def model_from_named_id(key, id)
-        name, _id = key.split('_')
+        name = key.gsub(/_id$/, '')
         name = name.camelize
         model_from_scope(
           id: id,
