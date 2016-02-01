@@ -28,8 +28,9 @@ ActiveRecord::Schema.define(version: 20160130125056) do
   end
 
   create_table "super_items", force: :cascade do |t|
-    t.string "item_type"
-    t.string "name"
+    t.string  "item_type"
+    t.string  "name"
+    t.integer "reference_id"
   end
 
   create_table "users", force: :cascade do |t|
