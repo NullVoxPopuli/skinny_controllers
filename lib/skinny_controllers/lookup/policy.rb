@@ -20,11 +20,11 @@ module SkinnyControllers
         default_policy = SkinnyControllers::Policy::Default
         namespace_klass = Object
         # if we are namespaced, we need to get / create the namespace if it doesn't exist already
-        if (name.include?('::'))
+        if name.include?('::')
           namespaces = name.split('::')
           namespace = namespaces[0..-2].join('::').presence
           namespace = namespace == name ? 'Object' : namespace
-          if (namespace.presence && namespace != name )
+          if namespace.presence && namespace != name
             namespace_klass = Namespace.create_namespace(namespace)
           end
         end

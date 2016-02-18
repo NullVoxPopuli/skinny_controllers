@@ -43,8 +43,6 @@ module SkinnyControllers
         namespace || Namespace.create_namespace(desired_namespace)
       end
 
-
-
       # @example 'Object' => 'ObjectOperations'
       # @return [String] the operation namespace based on the model name
       def namespace_from_model(model_name)

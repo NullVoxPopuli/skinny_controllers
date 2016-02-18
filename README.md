@@ -9,9 +9,7 @@ An implementation of role-based policies and operations to help controllers lose
 
 The goal of this project is to help API apps be more slim, and separate logic as much as possible.
 
-This gem is inspired by [trailblazer](https://github.com/apotonick/trailblazer), following similar patterns, yet allowing the structure of the rails app to not be entirely overhauled.
-
-Please note that this is a work in progress, and that the defaults are subject to change. If you have an idea or suggestion for improved defaults, please submit an issue or pull request. :-)
+If you have an idea or suggestion for improved defaults, please submit an issue or pull request. :-)
 
 # Installation
 
@@ -255,7 +253,18 @@ The following options are available:
 |`accessible_to_scope`| `accessible_to`| scope / class method on an object that the user might be able to access |
 |`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
 
-## TODO
 
- - Configurable Error Renderer
-   - Default to JSON API format errors?
+-------------------------------------------------------
+
+## How is this different from trailblazer?
+
+This may not be horribly apparent, but here is a table overviewing some highlevel differences
+
+| Feature | - | skinny_controllers | [trailblazer](https://github.com/apotonick/trailblazer) |
+|--|--|--|--|
+| Purpose |-| API - works very well with [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers)| General - additional featers for server-side rendered views |
+| Added Layers |-| Operations, Policies | Operations, Policies, Forms |
+| Validation |-| stay in models | moved to operations via contract block |
+| Additional objects| -| none | contacts, representers, callbacks, cells |
+| Rendering | -| done in the controller, and up to the dev to decide how that is done. `ActiveModel::Serializers` with JSON-API is highly recommended | representers provide a way to define serializers for json, xml, json-api, etc |
+| App Structure | - | same as rails. `app/operations` and `app/policies` are added | encourages a new structure 'concepts', where cells, view templates, assets, operations, etc are all under `concepts/{model-name}` |
