@@ -108,6 +108,16 @@ def host_params
 end
 ```
 
+The parameters for directly calling an operation are as follows:
+
+| # | Parameter | Default when directly calling an operation | Implicit default via `model` | Purpose |
+|--|--|--|--|
+| 0 | current_user | n/a | `current_user` | the user performing the action |
+| 1 | controller_params | n/a | `params` | the full params hash from the controller |
+| 2 | params_for_action | `controller_params` | `create_params`, `index_params`, etc |  e.g.: requiring a foreign key when looking up index |
+| 3 | action | `controller_params[:action]` | `action_name` | the name of the current action |
+| 4 | model_key | `nil` | underscored model class name | the underscored model class name |
+
 ### For JSON-API
 
 Strong parameters must be used on create/update actions.
