@@ -3,8 +3,10 @@ module SkinnyControllers
     extend ActiveSupport::Concern
 
     included do
-      cattr_accessor :model_class
-      cattr_accessor :model_key
+      class << self
+        attr_accessor :model_class
+        attr_accessor :model_key
+      end
     end
 
     # TODO: what if we want multiple operations per action?
@@ -14,7 +16,7 @@ module SkinnyControllers
       @operation ||= operation_class.new(
         current_user,
         params, params_for_action,
-        action_name, model_key)
+        action_name, self.class.model_key)
     end
 
     # Assumes the operation name from the controller name
@@ -22,7 +24,7 @@ module SkinnyControllers
     # @example SomeObjectsController => Operation::SomeObject::Action
     # @return [Class] the operation class for the model and verb
     def operation_class
-      Lookup::Operation.from_controller(self.class.name, verb_for_action, model_class)
+      Lookup::Operation.from_controller(self.class.name, verb_for_action, self.class.model_class)
     end
 
     # abstraction for `operation.run`
@@ -49,12 +51,15 @@ module SkinnyControllers
     def params_for_action
       return {} if action_name == 'destroy'
 
+      key = self.class.model_key
+      # model_class should be a class
+      klass = self.class.model_class
+
       model_key =
-        if self.model_key.present?
-          self.model_key
-        elsif model_class
-          # model_class should be a class
-          model_class.name.underscore
+        if key.present?
+          key
+        elsif klass
+          klass.name.underscore
         else
           Lookup::Controller.model_name(self.class.name).underscore
         end
