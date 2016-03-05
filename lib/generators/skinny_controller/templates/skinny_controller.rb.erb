@@ -1,0 +1,24 @@
+class <%= controller_name %> < <%= parent_class %>
+  include SkinnyControllers::Diet
+
+  def index
+    render json: model
+  end
+
+  def create
+    render json: model
+  end
+
+  def show
+    render json: model
+  end
+
+  def update
+    render json: model
+  end
+
+  def destroy
+    render json: model
+  end
+
+end
