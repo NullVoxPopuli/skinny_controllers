@@ -244,6 +244,158 @@ end
 ```
 
 
+## More Advanced Usage
+
+These are snippets taking from other projects.
+
+### Finding a record when the id parameter isn't passed
+
+
+
+```ruby
+module HostOperations
+  class Read < SkinnyControllers::Operation::Base
+    def run
+      model # always allowed, never restricted
+    end
+
+    # Needs to be overridden, because a 'host' can be either
+    # an Event or an Organization.
+    #
+    # the params to this method should include the subdomain
+    # e.g.: { subdomain: 'swingin2015' }
+    def model_from_params
+      subdomain = params[:subdomain]
+      # first check the events, since those are more commonly used
+      host = Event.find_by_domain(subdomain)
+      # if the event doesn't exist, see if we have an organization
+      host ||= Organization.find_by_domain(subdomain)
+    end
+  end
+end
+```
+
+### The built in model-finding methods can be completely ignored
+
+The `model` method does not need to be overridden. `run` is what is called on the operation.
+
+```ruby
+module MembershipRenewalOperations
+  # MembershipRenewalsController#index
+  class ReadAll < SkinnyControllers::Operation::Base
+
+    def run
+      # default 'model' functionality is avoided
+      latest_renewals
+    end
+
+    private
+
+    def organization
+      id = params[:organization_id]
+      Organization.find(id)
+    end
+
+    def renewals
+      options = organization.membership_options.includes(renewals: [:user, :membership_option])
+      options.map(&:renewals).flatten
+    end
+
+    def latest_renewals
+      sorted_renewals = renewals.sort_by{|r| [r.user_id,r.updated_at]}.reverse
+
+      # unique picks the first option.
+      # so, because the list is sorted by user id, then updated at,
+      # for each user, the first renewal will be chosen...
+      # and because it is descending, that means the most recent renewal
+      sorted_renewals.uniq{|r| r.user_id}
+    end
+  end
+
+end
+```
+
+## Testing
+
+The whole goal of this project is to minimize the complexity or existence of controller tests, and provide
+a way to unit test business logic.
+
+In the following examples, I'll be using RSpec -- but there isn't anything that would prevent you from using a different testing framework, if you so choose.
+
+### Operations
+
+```ruby
+describe HostOperations do
+  describe HostOperations::Read do
+    context 'model_from_params' do
+      let(:subdomain){ 'subdomain' }
+      # an operation takes a user, and a list of params
+      # there are optional parameters as well, but generally may not be required.
+      # see: `SkinnyControllers:::Operation::Base`
+      let(:operation){ HostOperations::Read.new(nil, { subdomain: subdomain }) }
+
+      it 'finds an event' do
+        event = create(:event, domain: subdomain)
+        model = operation.run
+        expect(model).to eq event
+      end
+      #...
+```
+
+### Policies
+
+With policies, I like to test using Procs, because the setup is the same for most actions, and it's easier to set up different scenarios.
+
+```ruby
+describe PackagePolicy do
+  # will test if the owner of this object can access it
+  let(:by_owner){
+    ->(method){
+      package = create(:package)
+      # a policy takes a user and an object
+      policy = PackagePolicy.new(package.event.hosted_by, package)
+      policy.send(method)
+    }
+  }
+
+  # will test if the person registering with this package has permission
+  let(:by_registrant){
+    ->(method){
+      event = create(:event)
+      package = create(:package, event: event)
+      attendance = create(:attendance, host: event, package: package)
+      # a policy takes a user and an object
+      policy = PackagePolicy.new(attendance.attendee, package)
+      policy.send(method)
+    }
+  }
+
+  context 'can be read?' do
+    it 'by the event owner' do
+      result = by_owner.call(:read?)
+      expect(result).to eq true
+    end
+
+    it 'by a registrant' do
+      result = by_registrant.call(:read?)
+      expect(result).to eq true
+    end
+  end
+
+  context 'can be updated?' do
+    it 'by the event owner' do
+      result = by_owner.call(:update?)
+      expect(result).to eq true
+    end
+
+    it 'by a registrant' do
+      result = by_registrant.call(:update?)
+      expect(result).to eq false
+    end
+  end
+```
+
+
 ## Globally Configurable Options
 
 All of these can be set on `SkinnyControllers`,
@@ -264,6 +416,10 @@ The following options are available:
 |`accessible_to_method`|`is_accessible_to?`| method to call an the object that the user might be able to access |
 |`accessible_to_scope`| `accessible_to`| scope / class method on an object that the user might be able to access |
 |`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
+
+
+
+
 
 
 -------------------------------------------------------
