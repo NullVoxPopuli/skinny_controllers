@@ -4,7 +4,7 @@ class OtherItemsController < ApplicationController
   self.model_key = 'other_item'
 
   def index
-    # todo: make this implicit
+    # TODO: make this implicit
     model = operation_class.new(current_user, params, index_params).run
     render json: model, include: params[:include]
   end

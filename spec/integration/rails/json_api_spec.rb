@@ -1,22 +1,21 @@
 require 'rails_helper'
 
 describe JsonApiEventsController, type: :controller do
-
   context 'JSON API Support' do
     context 'create / POST' do
       it 'creates a resource' do
         json_api = {
-          "data" => {
-            "attributes" => {
-              "name" => 'new_name'
+          'data' => {
+            'attributes' => {
+              'name' => 'new_name'
             },
-          "type" => "events"
+            'type' => 'events'
           }
         }
 
-        expect{
+        expect do
           post :create, json_api
-        }.to change(Event, :count).by(1)
+        end.to change(Event, :count).by(1)
       end
     end
 
@@ -27,12 +26,12 @@ describe JsonApiEventsController, type: :controller do
 
         json_api = {
           id: event.id,
-          "data" => {
-            "id" => "#{event.id}",
-            "attributes" => {
-              "name" => new_name
+          'data' => {
+            'id' => event.id.to_s,
+            'attributes' => {
+              'name' => new_name
             },
-          "type" => "events"
+            'type' => 'events'
           },
           format: 'json'
         }
@@ -43,5 +42,4 @@ describe JsonApiEventsController, type: :controller do
       end
     end
   end
-
 end

@@ -1,0 +1,40 @@
+class <%= policy_name %> < SkinnyControllers::Policy::Base
+
+  # Below are all the available permissions. Each permission corresponds
+  # to an action in the controller.
+  # Default functionality is to return true (allow) -- so the methods
+  # below do not need to exist, unless you want to add custom logic
+  # to them.
+  #
+  # The following variables are available to you in each policy
+  # - object - the object the user is trying to access.
+  # - user - the current user
+  #
+
+  # <%= controller_name %>#index
+  def read_all?
+    default? # SkinnyControllers.allow_by_default # aka "true"
+  end
+
+  # <%= controller_name %>#show
+  def read?
+    default? # SkinnyControllers.allow_by_default # aka "true"
+  end
+
+  # <%= controller_name %>#create
+  def create?
+    default? # SkinnyControllers.allow_by_default # aka "true"
+  end
+
+  # <%= controller_name %>#update
+  def update?
+    default? # SkinnyControllers.allow_by_default # aka "true"
+  end
+
+  # <%= controller_name %>#destroy
+  def delete?
+    default? # SkinnyControllers.allow_by_default # aka "true"
+  end
+
+
+end

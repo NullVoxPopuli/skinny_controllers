@@ -1,0 +1,5 @@
+Description:
+    Generates an operation for the given resource.
+
+Example:
+    `rails generate operation event_summary`

@@ -1,0 +1,5 @@
+Description:
+    Generates a policy for the given resource.
+
+Example:
+    `rails generate policy event_summary`
