@@ -1,0 +1,5 @@
+Description:
+    Generates a controller with the given name, including SkinnyControllers::Diet
+
+Example:
+    `rails generate skinny_controller event_summaries`

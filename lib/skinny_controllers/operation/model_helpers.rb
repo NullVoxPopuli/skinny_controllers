@@ -50,7 +50,7 @@ module SkinnyControllers
 
       def model_param_name
         # model_key comes from Operation::Base
-        self.model_key || model_name.underscore
+        model_key || model_name.underscore
       end
 
       # @param [Hash] scoped_params
@@ -95,7 +95,7 @@ module SkinnyControllers
           association = association_name_from_object
           scoped.send(association)
         else
-          fail "Parent object of type #{scope[:type]} not accessible"
+          raise "Parent object of type #{scope[:type]} not accessible"
         end
       end
 
