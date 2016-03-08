@@ -7,11 +7,10 @@ class OperationGenerator < Rails::Generators::NamedBase
   end
 
   def operation_name
-      file_name.camelize
+    file_name.camelize
   end
 
   def controller_name
-    operation_name.pluralize + "Controller"
+    operation_name.pluralize + 'Controller'
   end
-
 end

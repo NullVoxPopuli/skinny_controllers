@@ -35,9 +35,9 @@ describe RequiresParentController, type: :controller do
       event = create(:event)
       discount = create(:discount, event: event)
 
-      expect{
+      expect do
         get :index
-      }.to raise_error
+      end.to raise_error
     end
   end
 
@@ -68,9 +68,9 @@ describe RequiresParentController, type: :controller do
       event = create(:event)
       discount = create(:discount, event: event)
 
-      expect{
+      expect do
         get :show, id: discount.id
-      }.to raise_error
+      end.to raise_error
     end
 
     it 'returns only the requested event' do
@@ -84,5 +84,4 @@ describe RequiresParentController, type: :controller do
       expect(json['id']).to eq discount.id
     end
   end
-
 end

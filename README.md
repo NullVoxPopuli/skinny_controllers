@@ -22,6 +22,20 @@ or
 
 `gem install skinny_controllers`
 
+
+## Generators
+
+```
+rails g operation event_summary
+# => create  app/operations/event_summary_operations.rb
+
+rails g policy event_summary
+# create  app/policies/event_summary_policy.rb
+
+rails g skinny_controller event_summaries
+# create  app/controllers/event_summaries_controller.rb
+```
+
 # Usage
 
 ## In a controller:
@@ -46,18 +60,7 @@ The above does a multitude of assumptions to make sure that you can type the lea
 5. If relying on the default / implicit operations for create and update, the params key for your model's changes much be formatted as `{ Model.name.underscore => { attributes }}``
 6. If using strong parameters, SkinnyControllers will look for `{action}_{model}_params` then `{model}_params` and then `params`. See the `strong_parameters_spec.rb` test to see an example.
 
-## Generators
 
-```
-rails g operation event_summary
-# => create  app/operations/event_summary_operations.rb
-
-rails g policy event_summary
-# create  app/policies/event_summary_policy.rb
-
-rails g skinny_controller event_summaries
-# create  app/controllers/event_summaries_controller.rb
-```
 
 ### Your model name might be different from your resource name
 Lets say you have a JSON API resource that you'd like to render that has some additional/subset of data.
