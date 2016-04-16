@@ -1,5 +1,7 @@
 # skinny_controllers
 
+_Like Trailblazer, skinny_controllers is a thin layer on top of rails with a goal of much easier unit-testability_
+
 [![Join the chat at https://gitter.im/NullVoxPopuli/skinny_controllers](https://badges.gitter.im/NullVoxPopuli/skinny_controllers.svg)](https://gitter.im/NullVoxPopuli/skinny_controllers?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Gem Version](https://badge.fury.io/rb/skinny_controllers.svg)](https://badge.fury.io/rb/skinny_controllers)
 [![Build Status](https://travis-ci.org/NullVoxPopuli/skinny_controllers.svg?branch=master)](https://travis-ci.org/NullVoxPopuli/skinny_controllers)
@@ -12,6 +14,16 @@ An implementation of role-based policies and operations to help controllers lose
 The goal of this project is to help API apps be more slim, and separate logic as much as possible.
 
 If you have an idea or suggestion for improved defaults, please submit an issue or pull request. :-)
+
+# Overview
+
+- Controllers _only_ contain render logic. Typically, `render json: model`
+- Business logic is encapsulated in operations.
+  - Without creating any new classes, `render json: model` will give you default CRUD functionality in your controller actions.
+  - There is one operation per controller action.
+- Policies help determine whether or not the `current_user` is allowed to perform an action on an object.
+- [Click here to see how this is different from trailblazer](https://github.com/NullVoxPopuli/skinny_controllers#how-is-this-different-from-trailblazer)
+
 
 # Installation
 
