@@ -2,7 +2,7 @@
 
 _skinny_controllers is a thin layer on top of rails with the goal of allowing for much easier unit-testability, inspired by ember_
 
-A demo app [can be found here](https://github.com/NullVoxPopuli/skinny_controllers_demo)
+A demo app [in the spec here](https://github.com/NullVoxPopuli/skinny_controllers/tree/master/spec/support/rails_app).
 
 [![Join the chat at https://gitter.im/NullVoxPopuli/skinny_controllers](https://badges.gitter.im/NullVoxPopuli/skinny_controllers.svg)](https://gitter.im/NullVoxPopuli/skinny_controllers?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 [![Gem Version](https://badge.fury.io/rb/skinny_controllers.svg)](https://badge.fury.io/rb/skinny_controllers)
