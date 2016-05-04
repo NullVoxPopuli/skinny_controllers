@@ -345,6 +345,40 @@ module MembershipRenewalOperations
 end
 ```
 
+### Updating / Deleting the current_user
+
+This is something you could do if you always know your model ahead of time.
+
+```ruby
+module UserOperations
+  class Update < SkinnyControllers::Operation::Base
+    def run
+      return unless allowed_for?(current_user)
+      current_user.update_with_password(model_params)
+      current_user
+    end
+  end
+
+  class Delete < SkinnyControllers::Operation::Base
+    def run
+      if allowed_for?(current_user)
+        if current_user.upcoming_events.count > 0
+          current_user.errors.add(
+            :base,
+            "You cannot delete your account when you are about to attend an event."
+          )
+        else
+          current_user.destroy
+        end
+
+        current_user
+      end
+    end
+  end
+
+end
+```
+
 ## Testing
 
 The whole goal of this project is to minimize the complexity or existence of controller tests, and provide
