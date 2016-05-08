@@ -95,7 +95,7 @@ module SkinnyControllers
           association = association_name_from_object
           scoped.send(association)
         else
-          raise "Parent object of type #{scope[:type]} not accessible"
+          raise ActiveRecord::RecordNotFound, "Parent object of type #{scope[:type]} not accessible"
         end
       end
 
