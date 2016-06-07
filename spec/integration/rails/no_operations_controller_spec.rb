@@ -17,4 +17,13 @@ describe NoOperationsController, type: :controller do
       expect(json['id']).to eq no_operation.id
     end
   end
+
+  context 'create' do
+    it 'creates' do
+      expect{
+        post :create, no_operation: {}
+      }.to change(NoOperation, :count).by(1)
+
+    end
+  end
 end

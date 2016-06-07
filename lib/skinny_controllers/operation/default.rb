@@ -2,8 +2,6 @@ module SkinnyControllers
   module Operation
     class Default < Base
       def run
-        return unless allowed?
-
         # Note that for explicitly defined operations,
         # There should be a different operation for each
         # action.
@@ -14,8 +12,13 @@ module SkinnyControllers
         #  - EventOperations::Destroy
         if creating?
           @model = model_class.new(model_params)
-          @model.save
-        elsif updating?
+          @model.save if allowed?
+          return @model
+        end
+
+        return unless allowed?
+
+        if updating?
           model.update(model_params)
         elsif destroying?
           model.destroy
