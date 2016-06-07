@@ -11,4 +11,7 @@ FactoryGirl.define do
     name 'Some Discount'
     event
   end
+
+  factory :no_operation do
+  end
 end
