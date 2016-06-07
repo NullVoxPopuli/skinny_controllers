@@ -11,7 +11,7 @@ module SkinnyControllers
       def operation_of(model_name, verb)
         klass_name = Lookup::Operation.name_from_model(model_name, verb)
         klass = klass_name.safe_constantize
-        klass || default_operation_class_for(model_name)
+        klass || default_operation_class_for(model_name, verb)
       end
 
       # @param [String] controller name of the controller class
@@ -26,12 +26,13 @@ module SkinnyControllers
       # dynamically creates a module for the model if it
       # isn't already defined
       # @return [Class] default operation class
-      def default_operation_class_for(model_name)
+      # @param [String] verb
+      def default_operation_class_for(model_name, verb)
         default_operation = SkinnyControllers::Operation::Default
         namespace = Lookup::Operation.default_operation_namespace_for(model_name)
 
-        default = "#{namespace.name}::Default".safe_constantize
-        default || namespace.const_set('Default'.freeze, default_operation.dup)
+        default = "#{namespace.name}::#{verb}".safe_constantize
+        default || namespace.const_set(verb, default_operation.dup)
       end
 
       # @return [Class] namespace for the default operation class
