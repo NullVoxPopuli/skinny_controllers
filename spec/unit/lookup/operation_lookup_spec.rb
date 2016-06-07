@@ -14,8 +14,20 @@ describe SkinnyControllers::Lookup::Operation do
   context :default_operation_class_for do
     it 'creates a namespace' do
       expect(defined? SomeObjectOperations::Default).to be_falsey
-      klass.default_operation_class_for('SomeObject')
+      klass.default_operation_class_for('SomeObject', 'Default')
       expect(defined? SomeObjectOperations::Default).to be_truthy
+    end
+
+    it 'creates a namespace for reading all' do
+      expect(defined? SomeObjectOperations::ReadAll).to be_falsey
+      klass.default_operation_class_for('SomeObject', 'ReadAll')
+      expect(defined? SomeObjectOperations::ReadAll).to be_truthy
+    end
+
+    it 'creates a namespace for reading' do
+      expect(defined? SomeObjectOperations::Read).to be_falsey
+      klass.default_operation_class_for('SomeObject', 'Read')
+      expect(defined? SomeObjectOperations::Read).to be_truthy
     end
   end
 

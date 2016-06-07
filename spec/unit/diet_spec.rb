@@ -44,11 +44,6 @@ describe SkinnyControllers::Diet do
   end
 
   context :operation_class do
-    it 'gets the default operation class' do
-      klass = controller.operation_class
-      expect(klass).to eq FakeObjectOperations::Default
-    end
-
     it 'gets an explicitly defined operation class' do
       allow(example).to receive(:verb_for_action) { SkinnyControllers::DefaultVerbs::Read }
       klass = example.operation_class

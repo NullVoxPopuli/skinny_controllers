@@ -47,7 +47,8 @@ module SkinnyControllers
 
       # this should be used when checking access to a single object
       def read?(o = object)
-        o.send(accessible_method, user)
+        return  o.send(accessible_method, user) if o.respond_to?(accessible_method)
+        default?
       end
 
       # this should be used when checking access to multilpe objects
