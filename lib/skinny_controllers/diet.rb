@@ -78,8 +78,11 @@ module SkinnyControllers
 
     # action name is inherited from ActionController::Base
     # http://www.rubydoc.info/docs/rails/2.3.8/ActionController%2FBase%3Aaction_name
+
     def verb_for_action
-      SkinnyControllers.action_map[action_name] || SkinnyControllers.action_map['default']
+      SkinnyControllers.action_map[action_name] ||
+      (action_name && action_name.classify) ||
+      SkinnyControllers.action_map['default']
     end
   end
 end

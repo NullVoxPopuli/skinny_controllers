@@ -29,6 +29,12 @@ describe SkinnyControllers::Lookup::Operation do
       klass.default_operation_class_for('SomeObject', 'Read')
       expect(defined? SomeObjectOperations::Read).to be_truthy
     end
+
+    it 'creates a namespace for non-REST' do
+      expect(defined? SomeObjectOperations::RefundPayment).to be_falsey
+      klass.default_operation_class_for('SomeObject', 'RefundPayment')
+      expect(defined? SomeObjectOperations::RefundPayment).to be_truthy
+    end
   end
 
   context :default_operation_namespace_for do
