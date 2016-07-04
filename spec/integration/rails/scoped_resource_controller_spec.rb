@@ -6,6 +6,12 @@ describe DiscountsController, type: :controller do
     @event = create(:event)
   end
 
+  it 'calls a non-crud action' do
+    discount = create(:discount, event: @event)
+    expect_any_instance_of(DiscountOperations::RefundPayment).to receive(:run).and_call_original
+    get :refund_payment, id: discount.id
+  end
+
   it 'returns a list of discounts scoped to the event' do
     discount = create(:discount, event: @event)
 

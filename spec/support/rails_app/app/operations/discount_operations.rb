@@ -4,4 +4,10 @@ module DiscountOperations
       model
     end
   end
+
+  class RefundPayment < SkinnyControllers::Operation::Base
+    def run
+      model
+    end
+  end
 end

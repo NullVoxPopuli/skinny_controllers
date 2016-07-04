@@ -49,6 +49,18 @@ describe SkinnyControllers::Diet do
       klass = example.operation_class
       expect(klass).to eq ExampleOperations::Read
     end
+
+    it 'gets an arbitrary operation class' do
+      allow(example).to receive(:verb_for_action) { 'RefundPayment'.freeze }
+      klass = example.operation_class
+      expect(klass).to eq ExampleOperations::RefundPayment
+    end
+
+    it 'derives from params action' do
+      allow(example).to receive(:action_name) { 'refund_payment' }
+      klass = example.operation_class
+      expect(klass).to eq ExampleOperations::RefundPayment
+    end
   end
 
   context :model do

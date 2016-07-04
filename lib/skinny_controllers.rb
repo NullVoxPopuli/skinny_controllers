@@ -70,15 +70,24 @@ module SkinnyControllers
   # manipulated to fit the verb naming convention.
   #
   # @example POST controller#send_receipt will use 'SendReceipt' for the verb
+  #
+  # @note Deleting the action map will make the default CRUD operation classes be
+  #  - Index
+  #  - Show
+  #  - Destroy
+  #  - Create
+  #  - Update
   cattr_accessor :action_map do
     {
+      # @note the only way default will get called, is if action_name is nil
       'default'.freeze => DefaultVerbs::Read,
-      'index'.freeze => DefaultVerbs::ReadAll,
+      'show'.freeze    => DefaultVerbs::Read,
+      'index'.freeze   => DefaultVerbs::ReadAll,
       'destroy'.freeze => DefaultVerbs::Delete,
       # these two are redundant, as the action will be
       # converted to a verb via inflection
-      'create'.freeze => DefaultVerbs::Create,
-      'update'.freeze => DefaultVerbs::Update
+      'create'.freeze  => DefaultVerbs::Create,
+      'update'.freeze  => DefaultVerbs::Update
     }
   end
 end

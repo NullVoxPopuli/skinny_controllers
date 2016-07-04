@@ -3,7 +3,11 @@ Rails.application.routes.draw do
 
   resources :no_operations
   resources :strong_parameters
-  resources :discounts
+  resources :discounts do
+    member do
+      get :refund_payment
+    end
+  end
   resources :event_summaries
   resources :json_api_events
   resources :requires_parent
