@@ -15,6 +15,11 @@ describe SkinnyControllers::Lookup::Policy do
       result = klass.method_name_for_operation(ExampleOperations::Read.name)
       expect(result).to eq 'read?'
     end
+
+    it 'returns the multi-word policy name, given a proper operation class name' do
+      result = klass.method_name_for_operation(ExampleOperations::ReadAll.name)
+      expect(result).to eq 'read_all?'
+    end
   end
 
   context :namespace do

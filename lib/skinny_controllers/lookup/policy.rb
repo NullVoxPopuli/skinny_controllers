@@ -38,7 +38,7 @@ module SkinnyControllers
 
       # @param [String] class_name name of the operation class
       def method_name_for_operation(class_name)
-        class_name.demodulize.downcase + POLICY_METHOD_SUFFIX
+        class_name.demodulize.underscore + POLICY_METHOD_SUFFIX
       end
 
       def namespace

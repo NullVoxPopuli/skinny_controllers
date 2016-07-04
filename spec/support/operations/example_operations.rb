@@ -1,4 +1,9 @@
 module ExampleOperations
+  class ReadAll < SkinnyControllers::Operation::Base
+    def run
+      model
+    end
+  end
   class Read < SkinnyControllers::Operation::Base
     def run
       model if allowed?
