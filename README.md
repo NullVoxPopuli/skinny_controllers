@@ -212,10 +212,9 @@ To achieve default functionality, this operation *may* be defined -- though, it 
 module UserOperations
   class Create < SkinnyControllers::Operation::Base
     def run
-      return unless allowed?
       @model = model_class.new(model_params)
-      @model.save
-      @model # or just `model`
+      @model.save if allowed?
+      return @model # or just `model`
     end
   end
 end
