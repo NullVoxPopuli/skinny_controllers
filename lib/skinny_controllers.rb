@@ -7,6 +7,7 @@ require 'active_support/core_ext/string/inflections'
 
 # files for this gem
 require 'skinny_controllers/default_verbs'
+require 'skinny_controllers/exceptions'
 require 'skinny_controllers/lookup/namespace'
 require 'skinny_controllers/lookup/controller'
 require 'skinny_controllers/lookup/model'
@@ -33,6 +34,32 @@ module SkinnyControllers
   #  SkinnyControllers.controller_namespace = 'API'
   #  # 'API::' would be removed from 'API::Namespace::ObjectNamesController'
   cattr_accessor :controller_namespace
+
+  class << self; attr_accessor :logger; end
+  self.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
+
+
+  # Allows integration of a search gem, like ransack.
+  # The scope of this proc is within an operation, so all operation
+  # instance variables will be available.
+  #
+  # - params
+  # - params_for_action
+  # - current_user
+  # - action
+  # - model_key
+  # - model_params
+  #
+  # @example
+  #   # config/initializers/skinny_controllers.rb
+  #   SkinnyControllers.search_proc = ->(association) {
+  #     association.ransack(params[:q]).result
+  #   }
+  cattr_accessor :search_proc do
+    lambda do |association|
+      association
+    end
+  end
 
   cattr_accessor :operations_suffix do
     'Operations'.freeze

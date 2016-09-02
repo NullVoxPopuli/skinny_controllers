@@ -1,14 +1,15 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module DefaultVerbs
     # show
-    Read = 'Read'.freeze
+    Read = 'Read'
     # index
-    ReadAll = 'ReadAll'.freeze
+    ReadAll = 'ReadAll'
     # create
-    Create = 'Create'.freeze
+    Create = 'Create'
     # destroy
-    Delete = 'Delete'.freeze
+    Delete = 'Delete'
     # update
-    Update = 'Update'.freeze
+    Update = 'Update'
   end
 end

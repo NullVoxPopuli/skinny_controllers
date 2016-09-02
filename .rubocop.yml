@@ -13,6 +13,9 @@ Lint/NestedMethodDefinition:
   Exclude:
     - test/action_controller/serialization_test.rb
 
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 

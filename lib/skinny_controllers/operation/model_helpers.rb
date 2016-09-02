@@ -84,10 +84,9 @@ module SkinnyControllers
       def model_from_named_id(key, id)
         name = key.gsub(/_id$/, '')
         name = name.camelize
-        model_from_scope(
-          id: id,
-          type: name
-        )
+        association = model_from_scope(id: id, type: name)
+
+        SkinnyControllers.search_proc.call(association)
       end
 
       def model_from_scope(scope = params[:scope])

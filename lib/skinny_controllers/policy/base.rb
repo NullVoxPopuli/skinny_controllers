@@ -29,6 +29,7 @@ module SkinnyControllers
 
           # we know that these methods don't take any parameters,
           # so args and block can be ignored
+          SkinnyControllers.logger.warn("#{action} in policy #{self.class.name} was not found. Using :default?")
           send(:default?)
         else
           super
