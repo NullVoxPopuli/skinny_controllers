@@ -8,6 +8,7 @@ require 'active_support/core_ext/string/inflections'
 # files for this gem
 require 'skinny_controllers/default_verbs'
 require 'skinny_controllers/exceptions'
+require 'skinny_controllers/logging'
 require 'skinny_controllers/lookup/namespace'
 require 'skinny_controllers/lookup/controller'
 require 'skinny_controllers/lookup/model'
@@ -24,6 +25,8 @@ require 'skinny_controllers/diet'
 require 'skinny_controllers/version'
 
 module SkinnyControllers
+  include Logging
+
   POLICY_METHOD_SUFFIX = '?'.freeze
 
   # Tells the Diet what namespace of the controller
@@ -34,10 +37,6 @@ module SkinnyControllers
   #  SkinnyControllers.controller_namespace = 'API'
   #  # 'API::' would be removed from 'API::Namespace::ObjectNamesController'
   cattr_accessor :controller_namespace
-
-  class << self; attr_accessor :logger; end
-  self.logger = ActiveSupport::TaggedLogging.new(ActiveSupport::Logger.new(STDOUT))
-
 
   # Allows integration of a search gem, like ransack.
   # The scope of this proc is within an operation, so all operation

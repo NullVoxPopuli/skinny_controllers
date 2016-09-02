@@ -8,6 +8,11 @@ module SkinnyControllers
       def class_from_model(name)
         policy_class_name = class_name_from_model(name)
         klass = policy_class_name.safe_constantize
+
+        unless klass
+          SkinnyControllers.logger.warn("#{policy_class_name} not found. Creating Default...")
+        end
+
         klass || define_policy_class(policy_class_name)
       end
 

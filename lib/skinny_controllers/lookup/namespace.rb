@@ -18,6 +18,7 @@ module SkinnyControllers
           begin
             Object.const_get(current)
           rescue NameError => e
+            SkinnyControllers.logger.warn("Module #{namespace} not found, creating...")
             previous.const_set(namespace, Module.new)
           end
 
