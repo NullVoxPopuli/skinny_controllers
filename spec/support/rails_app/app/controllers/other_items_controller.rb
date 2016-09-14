@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class OtherItemsController < ApplicationController
   include SkinnyControllers::Diet
   self.model_class = SuperItem::OtherItem

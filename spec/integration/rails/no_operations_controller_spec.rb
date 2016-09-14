@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe NoOperationsController, type: :controller do
@@ -7,7 +8,7 @@ describe NoOperationsController, type: :controller do
 
   context 'show' do
     it 'gets the model - because the current_user is passed through the anonymous operation to the explicit policy' do
-      allow(controller).to receive(:current_user){ create(:user) }
+      allow(controller).to receive(:current_user) { create(:user) }
       no_operation = create(:no_operation)
 
       get :show, id: no_operation.id
@@ -20,10 +21,9 @@ describe NoOperationsController, type: :controller do
 
   context 'create' do
     it 'creates' do
-      expect{
+      expect do
         post :create, no_operation: {}
-      }.to change(NoOperation, :count).by(1)
-
+      end.to change(NoOperation, :count).by(1)
     end
   end
 end

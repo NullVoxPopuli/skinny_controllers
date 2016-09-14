@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# frozen_string_literal: true
 
 # allows bundler to use the gemspec for dependencies
 lib = File.expand_path('../lib', __FILE__)

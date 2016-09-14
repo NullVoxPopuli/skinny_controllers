@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class SkinnyControllerGenerator < Rails::Generators::NamedBase
   # gives us file_name
   source_root File.expand_path('../templates', __FILE__)

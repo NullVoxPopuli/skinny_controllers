@@ -1,5 +1,6 @@
+# frozen_string_literal: true
 class EventPolicy < SkinnyControllers::Policy::Base
-  def read?(o = object)
+  def read?(_o = object)
     # for testing, in real life, this is implicit, and
     # the method does not even need to be defined
     true

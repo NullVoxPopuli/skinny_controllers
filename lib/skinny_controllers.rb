@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 # required gems
 require 'active_support'
 require 'active_support/core_ext/class'

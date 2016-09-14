@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module Diet
     extend ActiveSupport::Concern
@@ -16,7 +17,8 @@ module SkinnyControllers
       @operation ||= operation_class.new(
         current_user,
         params, params_for_action,
-        action_name, self.class.model_key)
+        action_name, self.class.model_key
+      )
     end
 
     # Assumes the operation name from the controller name
@@ -81,8 +83,8 @@ module SkinnyControllers
 
     def verb_for_action
       SkinnyControllers.action_map[action_name] ||
-      (action_name && action_name.classify) ||
-      SkinnyControllers.action_map['default']
+        (action_name && action_name.classify) ||
+        SkinnyControllers.action_map['default']
     end
   end
 end
