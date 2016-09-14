@@ -19,22 +19,24 @@ module SkinnyControllers
       # @param [Array] args
       # @param [Proc] block
       def method_missing(method_name, *args, &block)
-        # if the method ends in a question mark, re-route to default
-        if method_name.to_s =~ /(.+)\?/
-          action = Regexp.last_match(1)
-          # alias destroy to delete
-          # TODO: this means that a destroy method, if defined,
-          #       will never be called.... good or bad?
-          #       should there be a difference between delete and destroy?
-          return send('delete?'.freeze) if action == 'destroy'.freeze
+        # unless the method ends in a question mark, re-route to default method_missing
+        return super unless method_name.to_s =~ /(.+)\?/
 
-          # we know that these methods don't take any parameters,
-          # so args and block can be ignored
-          SkinnyControllers.logger.warn("#{action} in policy #{self.class.name} was not found. Using :default?")
-          send(:default?)
-        else
-          super
-        end
+        action = Regexp.last_match(1)
+        # alias destroy to delete
+        # TODO: this means that a destroy method, if defined,
+        #       will never be called.... good or bad?
+        #       should there be a difference between delete and destroy?
+        return send('delete?'.freeze) if action == 'destroy'.freeze
+
+        # we know that these methods don't take any parameters,
+        # so args and block can be ignored
+        SkinnyControllers.logger.warn("#{action} in policy #{self.class.name} was not found. Using :default?")
+        send(:default?)
+      end
+
+      def respond_to_missing?(method_name, include_private = false)
+        method_name.to_s =~ /(.+)\?/ || super
       end
 
       # if a method is not defined for a particular verb or action,

@@ -7,7 +7,8 @@ describe NoOperationsController, type: :controller do
   end
 
   context 'show' do
-    it 'gets the model - because the current_user is passed through the anonymous operation to the explicit policy' do
+    it 'gets the model - because the current_user is passed
+        through the anonymous operation to the explicit policy' do
       allow(controller).to receive(:current_user) { create(:user) }
       no_operation = create(:no_operation)
 

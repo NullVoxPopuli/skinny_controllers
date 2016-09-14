@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
   s.summary     = "SkinnyControllers-#{SkinnyControllers::VERSION}"
   s.description = 'An implementation of role-based policies and operations to help controllers lose weight.'
 
-  s.files        = Dir['CHANGELOG.md', 'LICENSE' 'MIT-LICENSE', 'README.md', 'lib/**/*']
+  s.files        = Dir['CHANGELOG.md', 'LICENSE', 'README.md', 'lib/**/*']
   s.require_path = 'lib'
 
   s.test_files = s.files.grep(%r{^(test|spec|features)/})

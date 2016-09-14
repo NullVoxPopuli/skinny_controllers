@@ -34,7 +34,7 @@ describe RequiresParentController, type: :controller do
 
     it 'requires the parent id' do
       event = create(:event)
-      discount = create(:discount, event: event)
+      create(:discount, event: event)
 
       expect do
         get :index
