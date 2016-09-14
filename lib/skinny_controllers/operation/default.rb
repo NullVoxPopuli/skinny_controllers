@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module Operation
     class Default < Base
@@ -45,7 +46,7 @@ module SkinnyControllers
       end
 
       def check_allowed!
-        raise DeniedByPolicy.new(action) unless allowed?
+        raise DeniedByPolicy, action unless allowed?
       end
     end
   end
