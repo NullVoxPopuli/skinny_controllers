@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module UserOperations
   class Read < SkinnyControllers::Operation::Base
     def run

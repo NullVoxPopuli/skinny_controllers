@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module Lookup
     module Namespace
@@ -17,7 +18,8 @@ module SkinnyControllers
           current = (existing + [namespace]).join('::')
           begin
             Object.const_get(current)
-          rescue NameError => e
+          rescue NameError
+            SkinnyControllers.logger.warn("Module #{namespace} not found, creating...")
             previous.const_set(namespace, Module.new)
           end
 

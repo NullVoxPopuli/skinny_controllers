@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module Operation
     class Default < Base
@@ -12,11 +13,14 @@ module SkinnyControllers
         #  - EventOperations::Destroy
         if creating?
           @model = model_class.new(model_params)
-          @model.save if allowed?
+
+          check_allowed!
+
+          @model.save
           return @model
         end
 
-        return unless allowed?
+        check_allowed!
 
         if updating?
           model.update(model_params)
@@ -39,6 +43,10 @@ module SkinnyControllers
 
       def destroying?
         action == 'destroy'
+      end
+
+      def check_allowed!
+        raise DeniedByPolicy, action unless allowed?
       end
     end
   end

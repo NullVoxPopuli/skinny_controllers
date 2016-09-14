@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe EventOperations do
@@ -18,7 +19,7 @@ describe EventOperations do
       expect(op).to_not receive(:model_from_named_id)
       expect(op).to_not receive(:model_from_id)
       expect(op).to_not receive(:model_from_params)
-      result = op.find_model
+      op.find_model
     end
   end
 

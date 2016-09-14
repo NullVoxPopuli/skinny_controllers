@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 require 'rails_helper'
 
 describe RequiresParentController, type: :controller do
@@ -33,7 +34,7 @@ describe RequiresParentController, type: :controller do
 
     it 'requires the parent id' do
       event = create(:event)
-      discount = create(:discount, event: event)
+      create(:discount, event: event)
 
       expect do
         get :index

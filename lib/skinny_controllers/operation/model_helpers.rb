@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module Operation
     module ModelHelpers
@@ -42,7 +43,7 @@ module SkinnyControllers
         unless @model_params
           model_params = (params_for_action[model_param_name] || params_for_action)
 
-          @model_params = (model_params == params) ? {} : model_params.symbolize_keys
+          @model_params = model_params == params ? {} : model_params.symbolize_keys
         end
 
         @model_params
@@ -84,10 +85,9 @@ module SkinnyControllers
       def model_from_named_id(key, id)
         name = key.gsub(/_id$/, '')
         name = name.camelize
-        model_from_scope(
-          id: id,
-          type: name
-        )
+        association = model_from_scope(id: id, type: name)
+
+        SkinnyControllers.search_proc.call(association)
       end
 
       def model_from_scope(scope = params[:scope])

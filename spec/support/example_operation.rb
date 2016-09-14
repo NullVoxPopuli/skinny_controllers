@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 class Example
   class << self
     def find(*_args)

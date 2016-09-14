@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module Operation
     #
@@ -17,10 +18,23 @@ module SkinnyControllers
 
       attr_accessor :params, :current_user, :authorized_via_parent, :action, :params_for_action, :model_key
 
-      def self.run(current_user, params)
-        object = new(current_user, params)
-        object.run
+      class << self
+        def run(current_user, params)
+          object = new(current_user, params)
+          object.run
+        end
+
+        # To support the shorthand ruby/block syntax
+        # e.g.: MyOperation.()
+        alias_method :call, :run
       end
+
+      # To be overridden
+      def run; end
+
+      # To support teh shorthand ruby/block syntax
+      # e.g.: MyOperation.new().()
+      alias_method :call, :run
 
       # @param [Model] current_user the logged in user
       # @param [Hash] controller_params the params hash raw from the controller
@@ -82,7 +96,8 @@ module SkinnyControllers
         @policy ||= policy_class.new(
           current_user,
           object,
-          authorized_via_parent: authorized_via_parent)
+          authorized_via_parent: authorized_via_parent
+        )
       end
 
       def allowed?

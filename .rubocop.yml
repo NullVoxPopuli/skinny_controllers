@@ -13,6 +13,12 @@ Lint/NestedMethodDefinition:
   Exclude:
     - test/action_controller/serialization_test.rb
 
+Style/Alias:
+  EnforcedStyle: prefer_alias_method
+
+Style/FrozenStringLiteralComment:
+  EnforcedStyle: always
+
 Style/StringLiterals:
   EnforcedStyle: single_quotes
 

@@ -1,3 +1,4 @@
+# frozen_string_literal: true
 module SkinnyControllers
   module Lookup
     module Operation
@@ -31,7 +32,13 @@ module SkinnyControllers
         default_operation = SkinnyControllers::Operation::Default
         namespace = Lookup::Operation.default_operation_namespace_for(model_name)
 
-        default = "#{namespace.name}::#{verb}".safe_constantize
+        operation_class_name = "#{namespace.name}::#{verb}"
+        default = operation_class_name.safe_constantize
+
+        unless default
+          SkinnyControllers.logger.warn("#{operation_class_name} not found. Creating default...")
+        end
+
         default || namespace.const_set(verb, default_operation.dup)
       end
 
@@ -40,7 +47,14 @@ module SkinnyControllers
         # binding.pry
         desired_namespace = namespace_from_model(model_name)
         parent_namespace = SkinnyControllers.operations_namespace
-        namespace = "#{parent_namespace}::#{desired_namespace}".safe_constantize
+
+        namespace_name = "#{parent_namespace}::#{desired_namespace}"
+        namespace = namespace_name.safe_constantize
+
+        unless namespace
+          SkinnyControllers.logger.warn("#{namespace_name} not found. Creating...")
+        end
+
         namespace || Namespace.create_namespace(desired_namespace)
       end
 
