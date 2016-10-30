@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module SkinnyControllers
-  module Lookup
+  class Lookup
     module Namespace
       module_function
 

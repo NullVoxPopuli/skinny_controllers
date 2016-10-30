@@ -91,13 +91,4 @@ describe SkinnyControllers::Diet do
       end
     end
   end
-
-  context :controller_name_prefix do
-    it 'adds :: to the prefix' do
-      allow(SkinnyControllers).to receive(:controller_namespace) { 'API' }
-      prefix = SkinnyControllers::Lookup::Controller.namespace
-
-      expect(prefix).to eq 'API::'
-    end
-  end
 end

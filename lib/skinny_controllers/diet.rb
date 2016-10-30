@@ -17,7 +17,8 @@ module SkinnyControllers
       @operation ||= operation_class.new(
         current_user,
         params, params_for_action,
-        action_name, self.class.model_key
+        action_name, self.class.model_key,
+        _lookup
       )
     end
 
@@ -26,7 +27,15 @@ module SkinnyControllers
     # @example SomeObjectsController => Operation::SomeObject::Action
     # @return [Class] the operation class for the model and verb
     def operation_class
-      Lookup::Operation.from_controller(self.class.name, verb_for_action, self.class.model_class)
+      _lookup.operation_class
+    end
+
+    def _lookup
+      @_lookup ||= Lookup.from_controller(
+        controller_class: self.class,
+        verb:             verb_for_action,
+        model_class:      self.class.model_class
+      )
     end
 
     # abstraction for `operation.run`
@@ -63,7 +72,7 @@ module SkinnyControllers
         elsif klass
           klass.name.underscore
         else
-          Lookup::Controller.model_name(self.class.name).underscore
+          _lookup.model_name.underscore
         end
 
       action_params_method = "#{action_name}_#{model_key}_params"
