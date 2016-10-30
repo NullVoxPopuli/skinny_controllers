@@ -9,8 +9,13 @@ module SkinnyControllers
       end
 
       def ensure_operation_class!(qualified_name)
-        klass = qualified_name.safe_constantize
+        klass = operation_lookup(qualified_name)
         klass || use_defailt_operation(qualified_name)
+      end
+
+      def ensure_policy_class!(qualified_name)
+        klass = policy_lookup(qualified_name)
+        klass || Lookup::Policy.define_policy_class(qualified_name)
       end
 
       # This assumes the namespace already exists
@@ -36,9 +41,49 @@ module SkinnyControllers
       end
     end
 
-    def ensure_policy_class!(qualified_name)
-      qualified_name.safe_constantize ||
-        Lookup::Policy.define_policy_class(qualified_name)
+    def policy_lookup(qualified_name)
+      return if qualified_name.blank?
+      klass = qualified_name.safe_constantize
+
+      # Return if the constant exists, or if we can't travel
+      # up any higher.
+      return klass if klass
+      return unless qualified_name.include?('::')
+
+      # "Api::V1::CategoryPolicy"
+      # => "CategorPolicy"
+      target = qualified_name.demodulize
+
+      # "Api::V1::CategoryPolicy"
+      # => "Api"
+      namespace = qualified_name.deconstantize.deconstantize
+      next_lookup = [namespace, target].reject(&:blank?).join('::')
+
+      # recurse
+      policy_lookup(next_lookup)
+    end
+
+    def operation_lookup(qualified_name)
+      return if qualified_name.blank?
+      klass = qualified_name.safe_constantize
+
+      # Return if the constant exists, or if we can't travel
+      # up any higher.
+      return klass if klass
+      return unless qualified_name.scan(/::/).count > 2
+
+      # "Api::V1::CategoryOperations::Create"
+      # => "CategorOperations::Create"
+      parts = qualified_name.split('::')
+      target = parts[-2..-1]
+
+      # "Api::V1::CategoryPolicy"
+      # => "Api"
+      namespace = parts[0..-4]
+      next_lookup = [namespace, target].reject(&:blank?).join('::')
+
+      # recurse
+      operation_lookup(next_lookup)
     end
   end
 end
