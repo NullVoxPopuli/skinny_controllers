@@ -115,7 +115,7 @@ module SkinnyControllers
     # @return [String] the namespace
     def namespace
       @namespace ||= begin
-        resource_parts.length > 2 ? resource_parts[0..-2].join('::') : ''
+        resource_parts.length > 1 ? resource_parts[0..-2].join('::') : ''
       end
     end
 
