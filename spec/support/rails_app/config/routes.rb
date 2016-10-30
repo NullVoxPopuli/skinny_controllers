@@ -2,6 +2,12 @@
 Rails.application.routes.draw do
   resources :users
 
+  namespace :api do
+    namespace :v2 do
+      resources :posts
+    end
+  end
+
   resources :no_operations
   resources :strong_parameters
   resources :discounts do

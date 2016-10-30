@@ -16,7 +16,8 @@ module SkinnyControllers
     class Base
       include ModelHelpers
 
-      attr_accessor :params, :current_user, :authorized_via_parent, :action, :params_for_action, :model_key
+      attr_accessor :params, :current_user, :authorized_via_parent,
+        :action, :params_for_action, :model_key, :_lookup
 
       class << self
         def run(current_user, params)
@@ -40,13 +41,23 @@ module SkinnyControllers
       # @param [Hash] controller_params the params hash raw from the controller
       # @param [Hash] params_for_action optional params hash, generally the result of strong parameters
       # @param [string] action the current action on the controller
-      def initialize(current_user, controller_params, params_for_action = nil, action = nil, model_key = nil)
+      def initialize(current_user, controller_params, params_for_action = nil, action = nil,
+          model_key = nil, lookup = nil)
         self.authorized_via_parent = false
         self.current_user = current_user
         self.action = action || controller_params[:action]
         self.params = controller_params
         self.params_for_action = params_for_action || controller_params
         self.model_key = model_key
+        self._lookup = lookup
+      end
+
+      def lookup
+        @lookup ||= begin
+          _lookup || Lookup.from_operation(
+            operation_class: self.class
+          )
+        end
       end
 
       def id_from_params
@@ -60,13 +71,9 @@ module SkinnyControllers
         @id_from_params
       end
 
-      def model_class
-        @model_class ||= Lookup::Model.class_from_operation(self.class.name)
-      end
-
-      def model_name
-        @object_type_name ||= Lookup::Model.name_from_operation(self.class.name)
-      end
+      delegate :model_class, :model_name,
+        :policy_class, :policy_method_name,
+        to: :lookup
 
       # @example model_name == Namespace::Item
       #  -> model_name.tableize == namespace/items
@@ -75,20 +82,6 @@ module SkinnyControllers
       # TODO: maybe make this configurable?
       def association_name_from_object
         model_name.tableize.split('/').last
-      end
-
-      # Takes the class name of self and converts it to a Policy class name
-      #
-      # @example In Operation::Event::Read, Policy::EventPolicy is returned
-      def policy_class
-        @policy_class ||= Lookup::Policy.class_from_model(model_name)
-      end
-
-      # Converts the class name to the method name to call on the policy
-      #
-      # @example Operation::Event::Read would become read?
-      def policy_method_name
-        @policy_method_name ||= Lookup::Policy.method_name_for_operation(self.class.name)
       end
 
       # @return a new policy object and caches it

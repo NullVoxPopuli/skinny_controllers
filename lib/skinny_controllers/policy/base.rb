@@ -31,7 +31,7 @@ module SkinnyControllers
 
         # we know that these methods don't take any parameters,
         # so args and block can be ignored
-        SkinnyControllers.logger.warn("#{action} in policy #{self.class.name} was not found. Using :default?")
+        SkinnyControllers.logger.warn("method '#{action}' in policy '#{self.class.name}' was not found. Using :default?")
         send(:default?)
       end
 
@@ -51,7 +51,7 @@ module SkinnyControllers
 
       # this should be used when checking access to a single object
       def read?(o = object)
-        return  o.send(accessible_method, user) if o.respond_to?(accessible_method)
+        return o.send(accessible_method, user) if o.respond_to?(accessible_method)
         default?
       end
 

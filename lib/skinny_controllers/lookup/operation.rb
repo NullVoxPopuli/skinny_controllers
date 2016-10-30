@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 module SkinnyControllers
-  module Lookup
+  class Lookup
     module Operation
       module_function
 
@@ -13,15 +13,6 @@ module SkinnyControllers
         klass_name = Lookup::Operation.name_from_model(model_name, verb)
         klass = klass_name.safe_constantize
         klass || default_operation_class_for(model_name, verb)
-      end
-
-      # @param [String] controller name of the controller class
-      # @param [String] verb
-      # @param [String] model_name optional
-      # @return [Class] the class or default
-      def from_controller(controller, verb, model_name = nil)
-        model_name ||= Lookup::Controller.model_name(controller)
-        operation_of(model_name, verb)
       end
 
       # dynamically creates a module for the model if it
