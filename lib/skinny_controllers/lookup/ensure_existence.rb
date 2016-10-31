@@ -5,7 +5,8 @@ module SkinnyControllers
 
       # @return [Module] namespace
       def ensure_namespace!(namespace)
-        Namespace.create_namespace(namespace)
+        klass = namespace_lookup(namespace)
+        klass || Namespace.create_namespace(namespace)
       end
 
       def ensure_operation_class!(qualified_name)
@@ -39,6 +40,28 @@ module SkinnyControllers
           SkinnyControllers::Operation::Default.dup
         )
       end
+    end
+
+    def namespace_lookup(qualified_name)
+      return if qualified_name.blank?
+      klass = qualified_name.safe_constantize
+      return klass if klass
+      return unless qualified_name.include?('::')
+
+      parts = qualified_name.split('::')
+
+      # Api::V2::CategoriesNamespace
+      # => Api::CategoriesNamespace
+      demodulized = qualified_name.demodulize
+      namespace = parts[0..-3]
+      next_lookup = [namespace, demodulized].reject(&:blank?).join('::')
+      result = namespace_lookup(next_lookup)
+      return result if result
+
+      # Api::V2::CategoriesNamespace
+      # => V2::CategoriesNamespace
+      next_lookup = parts[1..-1].join('::')
+      namespace_lookup(next_lookup)
     end
 
     def policy_lookup(qualified_name)
@@ -78,10 +101,12 @@ module SkinnyControllers
       target = parts[-2..-1]
 
       # TODO: Lookup Chopping of namespaces going ->
+      # "Api::V1::CategoryOperations::Create"
+      # => "V1::CategoryOperaitons::Create"
 
       # Lookup Chopping of namespaces going <-
-      # "Api::V1::CategoryPolicy"
-      # => "Api"
+      # "Api::V1::CategoryOperations::Create"
+      # => "Api::CategoryOperations::Create"
       namespace = parts[0..-4]
       next_lookup = [namespace, target].reject(&:blank?).join('::')
 
