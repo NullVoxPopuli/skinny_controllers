@@ -7,7 +7,6 @@ require 'active_support/core_ext/object/try'
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/module/delegation'
 
-
 # files for this gem
 require 'skinny_controllers/default_verbs'
 require 'skinny_controllers/exceptions'
@@ -31,7 +30,7 @@ require 'skinny_controllers/version'
 module SkinnyControllers
   include Logging
 
-  POLICY_METHOD_SUFFIX = '?'.freeze
+  POLICY_METHOD_SUFFIX = '?'
 
   # Tells the Diet what namespace of the controller
   # isn't going to be part of the model name
@@ -65,19 +64,19 @@ module SkinnyControllers
   end
 
   cattr_accessor :operations_suffix do
-    'Operations'.freeze
+    'Operations'
   end
 
   cattr_accessor :policy_suffix do
-    'Policy'.freeze
+    'Policy'
   end
 
   cattr_accessor :operations_namespace do
-    ''.freeze
+    ''
   end
 
   cattr_accessor :policies_namespace do
-    ''.freeze
+    ''
   end
 
   cattr_accessor :allow_by_default do
@@ -110,14 +109,14 @@ module SkinnyControllers
   cattr_accessor :action_map do
     {
       # @note the only way default will get called, is if action_name is nil
-      'default'.freeze => DefaultVerbs::Read,
-      'show'.freeze    => DefaultVerbs::Read,
-      'index'.freeze   => DefaultVerbs::ReadAll,
-      'destroy'.freeze => DefaultVerbs::Delete,
+      'default' => DefaultVerbs::Read,
+      'show'    => DefaultVerbs::Read,
+      'index'   => DefaultVerbs::ReadAll,
+      'destroy' => DefaultVerbs::Delete,
       # these two are redundant, as the action will be
       # converted to a verb via inflection
-      'create'.freeze  => DefaultVerbs::Create,
-      'update'.freeze  => DefaultVerbs::Update
+      'create'  => DefaultVerbs::Create,
+      'update'  => DefaultVerbs::Update
     }
   end
 end

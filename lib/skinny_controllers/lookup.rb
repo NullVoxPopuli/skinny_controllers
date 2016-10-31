@@ -62,8 +62,12 @@ module SkinnyControllers
     # => Api::V2::PostOperations::Verb
     def operation_class
       @operation_class ||= begin
-        ensure_namespace!(operation_namespace) if operation_namespace.present?
-        ensure_operation_class!(namespaced_operation_name)
+        found_namespace = ensure_namespace!(operation_namespace)
+
+        operation = namespaced_operation_name.split(found_namespace.name).last
+        qualified_name = found_namespace ? found_namespace.name + operation : namespaced_operation_name
+
+        ensure_operation_class!(qualified_name)
       end
     end
 

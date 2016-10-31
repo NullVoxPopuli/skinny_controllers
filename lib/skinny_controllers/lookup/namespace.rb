@@ -17,6 +17,7 @@ module SkinnyControllers
         namespaces.each do |namespace|
           current = (existing + [namespace]).join('::')
           begin
+            # binding.pry
             Object.const_get(current)
           rescue NameError
             SkinnyControllers.logger.warn("Module #{namespace} not found, creating...")
@@ -24,8 +25,10 @@ module SkinnyControllers
           end
 
           existing << namespace
-          previous = current.constantize
+          previous = current.safe_constantize
         end
+
+        SkinnyControllers.logger.warn("Namespace is nil. Attempted: '#{desired_namespace}'") unless previous
 
         previous
       end
