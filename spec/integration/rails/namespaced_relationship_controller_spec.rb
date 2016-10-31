@@ -35,7 +35,6 @@ describe OtherItemsController, type: :controller do
 
       json = JSON.parse response.body
 
-      ap json
       expect(json['name']).to eq 'created'
     end
   end

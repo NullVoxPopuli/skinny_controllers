@@ -70,13 +70,16 @@ module SkinnyControllers
       # Return if the constant exists, or if we can't travel
       # up any higher.
       return klass if klass
-      return unless qualified_name.scan(/::/).count > 2
+      return unless qualified_name.scan(/::/).count > 1
 
       # "Api::V1::CategoryOperations::Create"
       # => "CategorOperations::Create"
       parts = qualified_name.split('::')
       target = parts[-2..-1]
 
+      # TODO: Lookup Chopping of namespaces going ->
+
+      # Lookup Chopping of namespaces going <-
       # "Api::V1::CategoryPolicy"
       # => "Api"
       namespace = parts[0..-4]
