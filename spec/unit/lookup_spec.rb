@@ -5,8 +5,12 @@ describe SkinnyControllers::Lookup do
   let(:klass) { SkinnyControllers::Lookup }
 
   context 'the operation namespace matches the controller namespace' do
+    # app/controllers/api/v2/posts_controller.rb
+    # app/operations/api/v2/post_operations.rb
+
     context 'the operation class is defined' do
       let(:posts_create) { klass.new(controller_class: Api::V2::PostsController, verb: 'Create') }
+
       it { expect(posts_create.namespace).to eq 'Api::V2' }
       it { expect(posts_create.resource_parts).to eq %w(Api V2 Posts) }
       it { expect(posts_create.operation_namespace).to eq 'Api::V2::PostOperations' }
@@ -25,6 +29,8 @@ describe SkinnyControllers::Lookup do
   end
 
   context 'the controller has a namespace, but the operations do not' do
+    # app/controllers/api/v2/comments_controller.rb
+    # app/operations/comment_operations.rb
     let(:comments_create) { klass.new(controller_class: Api::V2::CommentsController, verb: 'Create') }
 
     it { expect(comments_create.operation_name).to eq 'CommentOperations' }
@@ -33,6 +39,9 @@ describe SkinnyControllers::Lookup do
   end
 
   context 'the model/resource has a namespace' do
+    # app/controllers/other_items_controller.rb
+    # no operations
+    # app/models/super_item/other_item.rb
     let(:other_item_show) { klass.new(controller_cass: OtherItemsController, verb: 'Read', model_class: SuperItem::OtherItem) }
 
     xit { expect(other_item_show.operation_class).to eq SuperItem::OtherItemOperations }
