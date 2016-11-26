@@ -117,7 +117,7 @@ end
 ```
 `model_key` specifies the key to look for params when creating / updating the model.
 
-Note that while `model_key` doesn't *have* to be specified, it would default to name_space/item. So, just keep that in mind.  
+Note that while `model_key` doesn't *have* to be specified, it would default to name_space/item. So, just keep that in mind.
 
 ### What if you want to call your own operations?
 

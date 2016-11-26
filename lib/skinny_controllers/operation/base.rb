@@ -17,7 +17,9 @@ module SkinnyControllers
       include ModelHelpers
 
       attr_accessor :params, :current_user, :authorized_via_parent,
-        :action, :params_for_action, :model_key, :_lookup
+        :action, :params_for_action, :model_key,
+        :association_name,
+        :_lookup
 
       class << self
         def run(current_user, params)
@@ -37,12 +39,16 @@ module SkinnyControllers
       # e.g.: MyOperation.new().()
       alias_method :call, :run
 
+      # TODO: too many *optional* parameters. Group into options hash
+      #
       # @param [Model] current_user the logged in user
       # @param [Hash] controller_params the params hash raw from the controller
       # @param [Hash] params_for_action optional params hash, generally the result of strong parameters
       # @param [string] action the current action on the controller
-      def initialize(current_user, controller_params, params_for_action = nil, action = nil,
-          model_key = nil, lookup = nil)
+      def initialize(current_user, controller_params,
+          params_for_action = nil, action = nil,
+          model_key = nil, lookup = nil,
+          association_name = nil)
         self.authorized_via_parent = false
         self.current_user = current_user
         self.action = action || controller_params[:action]
@@ -50,6 +56,7 @@ module SkinnyControllers
         self.params_for_action = params_for_action || controller_params
         self.model_key = model_key
         self._lookup = lookup
+        self.association_name = association_name
       end
 
       def lookup
@@ -81,7 +88,7 @@ module SkinnyControllers
       #
       # TODO: maybe make this configurable?
       def association_name_from_object
-        model_name.tableize.split('/').last
+        association_name || model_name.tableize.split('/').last
       end
 
       # @return a new policy object and caches it

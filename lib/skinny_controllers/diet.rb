@@ -7,6 +7,7 @@ module SkinnyControllers
       class << self
         attr_accessor :model_class
         attr_accessor :model_key
+        attr_accessor :association_name
       end
     end
 
@@ -18,7 +19,8 @@ module SkinnyControllers
         current_user,
         params, params_for_action,
         action_name, self.class.model_key,
-        _lookup
+        _lookup,
+        self.class.association_name
       )
     end
 
