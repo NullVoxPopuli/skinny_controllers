@@ -17,7 +17,7 @@ module SkinnyControllers
         )
       end
 
-      def from_operation(operation_class:)
+      def from_operation(operation_class:, model_class:)
         qualified_name = operation_class.name
         parts = qualified_name.split('::')
         operation_name = parts[-2]
@@ -28,7 +28,7 @@ module SkinnyControllers
           # namespace:       parts[0..-3],
           operation_name:  operation_name,
           operation_class: operation_class,
-          model_name:      operation_parts.first,
+          model_class:     model_class,
           namespace:       qualified_name.deconstantize.deconstantize
         )
       end
@@ -87,7 +87,7 @@ module SkinnyControllers
     end
 
     def model_name
-      @model_name ||= @model_class.try(:name) || resource_parts[-1].singularize
+      @model_name ||= @model_class.try(:name) || resource_name
     end
 
     # @return [String] name of the supposed operation class
@@ -101,7 +101,7 @@ module SkinnyControllers
     def namespaced_policy_name
       @namespaced_policy_name ||= [
         namespace,
-        "#{model_name}#{SkinnyControllers.policy_suffix}"
+        "#{resource_name}#{SkinnyControllers.policy_suffix}"
       ].reject(&:blank?).join('::')
     end
 
@@ -113,7 +113,7 @@ module SkinnyControllers
     end
 
     def operation_name
-      @operation_name ||= "#{model_name}#{SkinnyControllers.operations_suffix}"
+      @operation_name ||= "#{resource_name}#{SkinnyControllers.operations_suffix}"
     end
 
     # @return [String] the namespace
@@ -123,17 +123,21 @@ module SkinnyControllers
       end
     end
 
+    def resource_name
+      @resource_name ||= resource_parts && resource_parts[-1].singularize || @model_class&.name
+    end
+
     # PostsController
     # => Posts
     #
     # Api::V2::PostsController
     # => Api, V2, Posts
     def resource_parts
-      @resource_parts ||= controller_class_name.split(/::|Controller/)
+      @resource_parts ||= controller_class_name&.split(/::|Controller/)
     end
 
     def controller_class_name
-      @controller_class_name ||= @controller_class.name
+      @controller_class_name ||= @controller_class&.name
     end
   end
 end

@@ -1,7 +1,13 @@
 # frozen_string_literal: true
 class RequiresParentController < ApplicationController
   include SkinnyControllers::Diet
-  self.model_class = Discount
+  # self.model_class = Discount
+  # self.association_name = :discounts
+
+  skinny_controllers_config model_class: Discount,
+                            parent_class: Event,
+                            association_name: :discounts
+
 
   def index
     model = operation_class.new(current_user, params, index_params).run
