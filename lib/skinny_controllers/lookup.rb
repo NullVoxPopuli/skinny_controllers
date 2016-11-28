@@ -124,7 +124,9 @@ module SkinnyControllers
     end
 
     def resource_name
-      @resource_name ||= resource_parts && resource_parts[-1].singularize || @model_class&.name
+      @resource_name ||= resource_parts && resource_parts[-1].singularize ||
+        @model_class&.name ||
+        operation_parts && operation_parts[-1].singularize
     end
 
     # PostsController
@@ -134,6 +136,10 @@ module SkinnyControllers
     # => Api, V2, Posts
     def resource_parts
       @resource_parts ||= controller_class_name&.split(/::|Controller/)
+    end
+
+    def operation_parts
+      @operation_parts ||= operation_namespace&.split(/::|Operations/)
     end
 
     def controller_class_name
