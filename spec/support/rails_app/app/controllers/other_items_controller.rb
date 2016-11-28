@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 class OtherItemsController < ApplicationController
   include SkinnyControllers::Diet
-  self.model_class = SuperItem::OtherItem
-  self.model_key = 'other_item'
+
+  skinny_controllers_config model_class: SuperItem::OtherItem,
+                            model_params_key: 'other_item'
 
   def index
     # TODO: make this implicit

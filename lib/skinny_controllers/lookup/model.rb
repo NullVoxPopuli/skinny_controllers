@@ -24,11 +24,9 @@ module SkinnyControllers
 
         # Namespace::ModelOperations::Verb => Namespace::ModelOperations
         namespace = operation_name.deconstantize
-        # Namespace::ModelOperations => ModelOperations
-        # nested_namespace = namespace.demodulize
-        nested_namespace = namespace.gsub(SkinnyControllers.operations_namespace, '')
+
         # ModelOperations => Model
-        nested_namespace.gsub(SkinnyControllers.operations_suffix, '')
+        namespace.gsub(SkinnyControllers.operations_suffix, '')
       end
     end
   end

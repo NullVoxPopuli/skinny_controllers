@@ -18,7 +18,7 @@ module SkinnyControllers
 
       attr_accessor :params, :current_user, :authorized_via_parent,
         :action, :params_for_action, :model_key,
-        :association_name,
+        :association_name, :options,
         :_lookup
 
       class << self
@@ -45,24 +45,27 @@ module SkinnyControllers
       # @param [Hash] controller_params the params hash raw from the controller
       # @param [Hash] params_for_action optional params hash, generally the result of strong parameters
       # @param [string] action the current action on the controller
-      def initialize(current_user, controller_params,
-          params_for_action = nil, action = nil,
-          model_key = nil, lookup = nil,
-          association_name = nil)
+      def initialize(current_user,
+        controller_params, params_for_action = nil,
+        action = nil,
+        lookup = nil,
+        options = {})
         self.authorized_via_parent = false
         self.current_user = current_user
         self.action = action || controller_params[:action]
         self.params = controller_params
         self.params_for_action = params_for_action || controller_params
-        self.model_key = model_key
         self._lookup = lookup
-        self.association_name = association_name
+        self.options = options
+        self.model_key = options[:model_params_key]
+        self.association_name = options[:association_name]
       end
 
       def lookup
         @lookup ||= begin
           _lookup || Lookup.from_operation(
-            operation_class: self.class
+            operation_class: self.class,
+            model_class: options[:model_class]
           )
         end
       end

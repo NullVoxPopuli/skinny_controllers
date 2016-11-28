@@ -71,20 +71,19 @@ describe SkinnyControllers::Policy::Base do
     end
 
     context :read? do
-      it 'calls the accessible method on the object' do
+      it 'calls the default accessor method' do
         policy = klass.new(user, object)
-        expect(object).to receive(SkinnyControllers.accessible_to_method).once
+        expect(policy).to receive(:default?).once
         policy.read?
       end
     end
 
     context :read_all? do
-      it 'calls the accessible method for each object' do
+      it 'calls the default method for each object' do
         object2 = Example.new
         policy = klass.new(user, [object, object2])
 
-        expect(object).to receive(SkinnyControllers.accessible_to_method).once
-        expect(object2).to receive(SkinnyControllers.accessible_to_method).once
+        expect(policy).to receive(:default?).twice
 
         policy.read_all?
       end

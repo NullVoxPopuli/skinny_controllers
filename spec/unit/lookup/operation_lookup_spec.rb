@@ -59,7 +59,7 @@ describe SkinnyControllers::Lookup::Operation do
       verb = SkinnyControllers::DefaultVerbs::ReadAll
       name = 'SomeObject'
       suffix = SkinnyControllers.operations_suffix
-      expected = SkinnyControllers.operations_namespace + '::' + name + suffix + '::' + verb
+      expected = name + suffix + '::' + verb
 
       result = klass.name_from_model(name, verb)
 

@@ -4,6 +4,6 @@ class UserPolicy < SkinnyControllers::Policy::DenyAll
 
   # allow if we are deleting ourselves / cancelling our account
   def delete?
-    object.send(accessible_method, user)
+    object.is_accessible_to?(user)
   end
 end

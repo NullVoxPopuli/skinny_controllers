@@ -61,7 +61,15 @@ module SkinnyControllers
         unless @scoped_model
           klass_name = scoped_params[:type]
           operation_class = Lookup::Operation.operation_of(klass_name, DefaultVerbs::Read)
-          operation = operation_class.new(current_user, id: scoped_params[:id])
+
+          params = { id: scoped_params[:id] }
+          operation = operation_class.new(
+            current_user,
+            params, params,
+            'show', nil,
+            model_class: klass_name.safe_constantize
+          )
+
           @scoped_model = operation.run
           self.authorized_via_parent = !!@scoped_model
         end
@@ -70,16 +78,7 @@ module SkinnyControllers
       end
 
       def model_from_params
-        ar_proxy = model_class.where(sanitized_params)
-
-        if ar_proxy.respond_to? SkinnyControllers.accessible_to_scope
-          # It's better to filter in sql, than in the app, so if there is
-          # a way to do the filtering in active query, do that. This will help
-          # mitigate n+1 query scenarios
-          return ar_proxy.send(SkinnyControllers.accessible_to_scope, current_user)
-        end
-
-        ar_proxy
+        model_class.where(sanitized_params)
       end
 
       def model_from_named_id(key, id)
@@ -93,6 +92,7 @@ module SkinnyControllers
       def model_from_scope(scope = params[:scope])
         if scoped = scoped_model(scope)
           association = association_name_from_object
+
           scoped.send(association)
         else
           raise ActiveRecord::RecordNotFound, "Parent object of type #{scope[:type]} not accessible"

@@ -3,12 +3,31 @@ module SkinnyControllers
   module Diet
     extend ActiveSupport::Concern
 
+    ALLOWED_OPTIONS = [
+      :model_class, :parent_class,
+      :asociation_name,
+      :model_params_key
+    ].freeze
+
     included do
       class << self
-        attr_accessor :model_class
-        attr_accessor :model_key
-        attr_accessor :association_name
+        attr_accessor :options
+
+        def skinny_controllers_config(options = {})
+          @options = options.select { |o| ALLOWED_OPTIONS.include?(o) }
+        end
       end
+    end
+
+    def create_operation(user:, params_for_action: nil)
+      operation_class.new(
+        user,
+        params,
+        params_for_action,
+        action_name,
+        _lookup,
+        _options
+      )
     end
 
     # TODO: what if we want multiple operations per action?
@@ -18,9 +37,9 @@ module SkinnyControllers
       @operation ||= operation_class.new(
         current_user,
         params, params_for_action,
-        action_name, self.class.model_key,
+        action_name,
         _lookup,
-        self.class.association_name
+        _options
       )
     end
 
@@ -32,11 +51,15 @@ module SkinnyControllers
       _lookup.operation_class
     end
 
+    def _options
+      self.class.options || {}
+    end
+
     def _lookup
       @_lookup ||= Lookup.from_controller(
         controller_class: self.class,
         verb:             verb_for_action,
-        model_class:      self.class.model_class
+        model_class:      _options[:model_class]
       )
     end
 
@@ -64,9 +87,9 @@ module SkinnyControllers
     def params_for_action
       return {} if action_name == 'destroy'
 
-      key = self.class.model_key
+      key = _options[:model_params_key]
       # model_class should be a class
-      klass = self.class.model_class
+      klass = _options[:model_class]
 
       model_key =
         if key.present?

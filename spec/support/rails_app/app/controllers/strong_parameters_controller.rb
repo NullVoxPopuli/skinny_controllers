@@ -2,7 +2,7 @@
 class StrongParametersController < ApplicationController
   include SkinnyControllers::Diet
 
-  self.model_class = Event
+  skinny_controllers_config model_class: Event
 
   def create
     render json: model
