@@ -78,16 +78,7 @@ module SkinnyControllers
       end
 
       def model_from_params
-        ar_proxy = model_class.where(sanitized_params)
-
-        if ar_proxy.respond_to? SkinnyControllers.accessible_to_scope
-          # It's better to filter in sql, than in the app, so if there is
-          # a way to do the filtering in active query, do that. This will help
-          # mitigate n+1 query scenarios
-          return ar_proxy.send(SkinnyControllers.accessible_to_scope, current_user)
-        end
-
-        ar_proxy
+        model_class.where(sanitized_params)
       end
 
       def model_from_named_id(key, id)

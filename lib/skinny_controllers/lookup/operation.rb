@@ -37,7 +37,7 @@ module SkinnyControllers
       def default_operation_namespace_for(model_name)
         # binding.pry
         desired_namespace = namespace_from_model(model_name)
-        parent_namespace = SkinnyControllers.operations_namespace
+        parent_namespace = ''#SkinnyControllers.operations_namespace
 
         namespace_name = "#{parent_namespace}::#{desired_namespace}"
         namespace = namespace_name.safe_constantize
@@ -61,10 +61,8 @@ module SkinnyControllers
       # @param [String] the verb/action for the operation
       # @return [String] the operation based on the model name
       def name_from_model(model_name, verb)
-        # this namespace is '' by default
-        prefix = SkinnyControllers.operations_namespace
         namespace = Lookup::Operation.namespace_from_model(model_name)
-        "#{prefix}::#{namespace}::#{verb}"
+        "#{namespace}::#{verb}"
       end
     end
   end

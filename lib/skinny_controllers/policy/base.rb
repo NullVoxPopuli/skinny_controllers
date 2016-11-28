@@ -27,7 +27,7 @@ module SkinnyControllers
         # TODO: this means that a destroy method, if defined,
         #       will never be called.... good or bad?
         #       should there be a difference between delete and destroy?
-        return send('delete?'.freeze) if action == 'destroy'.freeze
+        return send('delete?') if action == 'destroy'
 
         # we know that these methods don't take any parameters,
         # so args and block can be ignored
@@ -51,7 +51,6 @@ module SkinnyControllers
 
       # this should be used when checking access to a single object
       def read?(o = object)
-        return o.send(accessible_method, user) if o.respond_to?(accessible_method)
         default?
       end
 
@@ -71,12 +70,6 @@ module SkinnyControllers
         # object save
         accessible = object.map { |ea| read?(ea) }
         accessible.all?
-      end
-
-      private
-
-      def accessible_method
-        SkinnyControllers.accessible_to_method
       end
     end
   end

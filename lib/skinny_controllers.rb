@@ -32,15 +32,6 @@ module SkinnyControllers
 
   POLICY_METHOD_SUFFIX = '?'
 
-  # Tells the Diet what namespace of the controller
-  # isn't going to be part of the model name
-  #
-  # @example
-  #  # config/initializers/skinny_controllers.rb
-  #  SkinnyControllers.controller_namespace = 'API'
-  #  # 'API::' would be removed from 'API::Namespace::ObjectNamesController'
-  cattr_accessor :controller_namespace
-
   # Allows integration of a search gem, like ransack.
   # The scope of this proc is within an operation, so all operation
   # instance variables will be available.
@@ -71,24 +62,8 @@ module SkinnyControllers
     'Policy'
   end
 
-  cattr_accessor :operations_namespace do
-    ''
-  end
-
-  cattr_accessor :policies_namespace do
-    ''
-  end
-
   cattr_accessor :allow_by_default do
     true
-  end
-
-  cattr_accessor :accessible_to_method do
-    :is_accessible_to?
-  end
-
-  cattr_accessor :accessible_to_scope do
-    :accessible_to
   end
 
   # the diet uses ActionController::Base's
