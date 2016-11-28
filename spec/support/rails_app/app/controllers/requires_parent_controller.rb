@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 class RequiresParentController < ApplicationController
   include SkinnyControllers::Diet
-  # self.model_class = Discount
-  # self.association_name = :discounts
 
   skinny_controllers_config model_class: Discount,
                             parent_class: Event,
@@ -10,12 +8,12 @@ class RequiresParentController < ApplicationController
 
 
   def index
-    model = operation_class.new(current_user, params, index_params, nil, nil, _options).run
+    model = create_operation(user: current_user, params_for_action: index_params).run
     render json: model, include: params[:include]
   end
 
   def show
-    model = operation_class.new(current_user, params, index_params).run
+    model = create_operation(user: current_user, params_for_action: index_params).run
     render json: model, include: params[:include]
   end
 

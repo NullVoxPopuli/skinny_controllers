@@ -19,8 +19,15 @@ module SkinnyControllers
       end
     end
 
-    def create_operation(user:, params:, params_for_action: nil, options: {})
-
+    def create_operation(user:, params_for_action: nil)
+      operation_class.new(
+        user,
+        params,
+        params_for_action,
+        action_name,
+        _lookup,
+        _options
+      )
     end
 
     # TODO: what if we want multiple operations per action?
@@ -45,7 +52,7 @@ module SkinnyControllers
     end
 
     def _options
-      self.class.options
+      self.class.options || {}
     end
 
     def _lookup
