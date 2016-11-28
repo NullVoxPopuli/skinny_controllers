@@ -35,15 +35,11 @@ module SkinnyControllers
 
       # @return [Class] namespace for the default operation class
       def default_operation_namespace_for(model_name)
-        # binding.pry
         desired_namespace = namespace_from_model(model_name)
-        parent_namespace = ''#SkinnyControllers.operations_namespace
-
-        namespace_name = "#{parent_namespace}::#{desired_namespace}"
-        namespace = namespace_name.safe_constantize
+        namespace = desired_namespace.safe_constantize
 
         unless namespace
-          SkinnyControllers.logger.warn("#{namespace_name} not found. Creating...")
+          SkinnyControllers.logger.warn("#{desired_namespace} not found. Creating...")
         end
 
         namespace || Namespace.create_namespace(desired_namespace)

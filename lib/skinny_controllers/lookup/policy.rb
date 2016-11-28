@@ -18,8 +18,7 @@ module SkinnyControllers
       end
 
       def class_name_from_model(name)
-        parent_namespace = namespace.present? ? "#{namespace}::" : ''
-        "#{parent_namespace}#{name}" + SkinnyControllers.policy_suffix
+        "#{name}#{SkinnyControllers.policy_suffix}"
       end
 
       def define_policy_class(name)
@@ -45,10 +44,6 @@ module SkinnyControllers
       # @param [String] class_name name of the operation class
       def method_name_for_operation(class_name)
         class_name.demodulize.underscore + POLICY_METHOD_SUFFIX
-      end
-
-      def namespace
-        ''
       end
     end
   end

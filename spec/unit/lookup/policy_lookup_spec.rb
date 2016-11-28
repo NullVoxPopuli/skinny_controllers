@@ -22,10 +22,4 @@ describe SkinnyControllers::Lookup::Policy do
       expect(result).to eq 'read_all?'
     end
   end
-
-  context :namespace do
-    it 'defaults to none' do
-      expect(klass.namespace).to eq ''
-    end
-  end
 end
