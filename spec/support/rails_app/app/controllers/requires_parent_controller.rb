@@ -10,7 +10,7 @@ class RequiresParentController < ApplicationController
 
 
   def index
-    model = operation_class.new(current_user, params, index_params).run
+    model = operation_class.new(current_user, params, index_params, nil, nil, _options).run
     render json: model, include: params[:include]
   end
 

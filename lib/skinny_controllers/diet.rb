@@ -19,6 +19,10 @@ module SkinnyControllers
       end
     end
 
+    def create_operation(user:, params:, params_for_action: nil, options: {})
+
+    end
+
     # TODO: what if we want multiple operations per action?
     #
     # @return an instance of the operation with default parameters

@@ -91,7 +91,6 @@ module SkinnyControllers
       #
       # TODO: maybe make this configurable?
       def association_name_from_object
-        ap association_name
         association_name || model_name.tableize.split('/').last
       end
 
