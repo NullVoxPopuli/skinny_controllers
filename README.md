@@ -34,12 +34,14 @@ gem 'skinny_controllers'
 ```
 or
 
-`gem install skinny_controllers`
+```bash
+gem install skinny_controllers
+```
 
 
 ## Generators
 
-```
+```bash
 rails g operation event_summary
 # => create  app/operations/event_summary_operations.rb
 
@@ -65,18 +67,24 @@ and that's it!
 
 The above does a multitude of assumptions to make sure that you can type the least amount code possible.
 
-1. Your controller name is based off your model name (configurable per controller)
+1. Your controller name is the name of your _resource_.
 2. Any defined policies or operations follow the formats (though they don't have to exist):
-  - `class #{Model.name}Policy`
-  - `module #{Model.name}Operations`
+  - `class #{resource_name}Policy`
+  - `module #{resource_name}Operations`
 3. Your model responds to `find`, and `where`
-4. Your model responds to `is_accessible_to?`. This can be changed at `SkinnyControllers.accessible_to_method`
-5. If relying on the default / implicit operations for create and update, the params key for your model's changes much be formatted as `{ Model.name.underscore => { attributes }}``
-6. If using strong parameters, SkinnyControllers will look for `{action}_{model}_params` then `{model}_params` and then `params`. See the `strong_parameters_spec.rb` test to see an example.
+4. If relying on the default / implicit operations for create and update, the params key for your model's changes much be formatted as `{ Model.name.underscore => { attributes }}`
+5. If using strong parameters, SkinnyControllers will look for `{action}_{model}_params` then `{model}_params` and then `params`. See the `strong_parameters_spec.rb` test to see an example.
 
+### Per Controller Configuration
 
+```ruby
+skinny_controllers_config model_class: AClass,
+                          parent_class: ParentClass,
+                          asociation_name: :association_aclasses,
+                          model_params_key: :aclass
+```
 
-### Your model name might be different from your resource name
+#### model_class
 Lets say you have a JSON API resource that you'd like to render that has some additional/subset of data.
 Maybe the model is an `Event`, and the resource an `EventSummary` (which could do some aggregation of `Event` data).
 
@@ -90,7 +98,8 @@ In `EventSummariesController`, you would make the following additions:
 ```ruby
 class EventSummariesController < ApiController # or whatever your superclass is
   include SkinnyControllers::Diet
-  self.model_class = Event
+
+  skinny_controllers_config model_class: Event
 
   def index
     render json: model, each_serializer: EventSummariesSerializer
@@ -101,7 +110,16 @@ class EventSummariesController < ApiController # or whatever your superclass is
   end
 end
 ```
+
 Note that `each_serializer` and `serializer` is not part of `SkinnyControllers`, and is part of [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers).
+
+
+
+#### parent_class
+
+#### association_name
+
+#### model_params_key
 
 
 ### What if your model is namespaced?
