@@ -113,7 +113,7 @@ end
 
 Note that `each_serializer` and `serializer` is not part of `SkinnyControllers`, and is part of [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers).
 
-
+Also note that setting `model_class` may be required if your model is namespaced.
 
 #### parent_class
 
