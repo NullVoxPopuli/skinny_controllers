@@ -108,7 +108,7 @@ module SkinnyControllers
       end
 
       def check_allowed!(*args)
-        raise DeniedByPolicy(*args.presence || action) unless allowed?
+        raise DeniedByPolicy.new(*args.presence || action) unless allowed?
       end
 
       # checks the policy

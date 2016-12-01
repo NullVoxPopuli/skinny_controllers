@@ -44,10 +44,6 @@ module SkinnyControllers
       def destroying?
         action == 'destroy'
       end
-
-      def check_allowed!
-        super(action)
-      end
     end
   end
 end
