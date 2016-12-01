@@ -543,7 +543,7 @@ This may not be horribly apparent, but here is a table overviewing some highleve
 
 | Feature | - | skinny_controllers | [trailblazer](https://github.com/apotonick/trailblazer) |
 |----|----|----|----|
-| Purpose |-| API - works very well with [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers)| General - additional featers for server-side rendered views |
+| Purpose |-| API - works very well with [ActiveModel::Serializers](https://github.com/rails-api/active_model_serializers)| General - additional features for server-side rendered views |
 | Added Layers |-| Operations, Policies | Operations, Policies, Forms |
 | Validation |-| stay in models | moved to operations via contract block |
 | Additional objects|-| none | contacts, representers, callbacks, cells |
