@@ -115,12 +115,51 @@ Note that `each_serializer` and `serializer` is not part of `SkinnyControllers`,
 
 Also note that setting `model_class` may be required if your model is namespaced.
 
-#### parent_class
+#### parent_class and association_name
 
-#### association_name
+If you want to scope the finding of a resource to a parent object, `parent_class` must be set
+
+```ruby
+skinny_controllers_config parent_class: ParentClass,
+                          assaciation_name: :children,
+                          model_class: Child
+```
+
+Given the above configuration in a controller, and a request with the params:
+
+```
+{
+  id: 2,
+  parent_id: 78  
+}
+```
+
+The following query will be made:
+
+```ruby
+Parent.find(78).children.find(2)
+```
 
 #### model_params_key
 
+Date stored another a different key in `params`?
+
+```ruby
+skinny_controllers_config model_class: Child,
+                          model_params_key: :progeny
+```
+
+Given the above configuration in a controller, and a request with the params:
+
+```
+{
+  progeny: {
+    attribute1: 'value'
+  }
+}
+```
+
+The attributes inside the `progeny` sub hash will be used instead of the default, `child`.
 
 ### What if your model is namespaced?
 
@@ -129,8 +168,9 @@ All you have to do is set the `model_class`, and `model_key`.
 ```ruby
 class ItemsController < ApiController # or whatever your superclass is
   include SkinnyControllers::Diet
-  self.model_class = NameSpace::Item
-  self.model_key = 'item'
+
+  skinny_controllers_config model_class: NameSpace::Item
+                            model_params_key: :item
 end
 ```
 `model_key` specifies the key to look for params when creating / updating the model.
@@ -230,7 +270,7 @@ To achieve default functionality, this operation *may* be defined -- though, it 
 module UserOperations
   class Create < SkinnyControllers::Operation::Base
     def run
-      @model = model_class.new(model_params)
+      @model = User.new(model_params)
 
       # raising an exception here allows the corresponding resource controller to
       # `rescue_from SkinnyControllers::DeniedByPolicy` and have a uniform error
@@ -293,6 +333,15 @@ end
 ## More Advanced Usage
 
 These are snippets taking from other projects.
+
+### Using ransack
+
+```ruby
+# config/initializers/skinny_controllers.rb
+SkinnyControllers.search_proc = lambda do |relation|
+  relation.ransack(params[:q]).result
+end
+```
 
 ### Finding a record when the id parameter isn't passed
 
@@ -483,6 +532,7 @@ The following options are available:
 |`controller_namespace`|`''`| Global Namespace for all controllers (e.g.: `'API'`) |
 |`allow_by_default`| `true` | Default permission |
 |`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
+| `search_proc`| passthrough | can be used to filter results, such as with using ransack |
 
 
 -------------------------------------------------------
