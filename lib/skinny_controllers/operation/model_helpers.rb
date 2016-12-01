@@ -86,7 +86,7 @@ module SkinnyControllers
         name = name.camelize
         association = model_from_scope(id: id, type: name)
 
-        SkinnyControllers.search_proc.call(association)
+        instance_exec(association, &SkinnyControllers.search_proc)
       end
 
       def model_from_scope(scope = params[:scope])
