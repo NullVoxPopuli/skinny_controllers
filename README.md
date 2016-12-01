@@ -160,13 +160,13 @@ end
 
 The parameters for directly calling an operation are as follows:
 
-| # | Parameter | Default when directly calling an operation | Implicit default via `model` | Purpose |
+| # | Parameter | Default when directly calling an operation | Implicit default | Purpose |
 |---|-------------------|--------------------------------------------|------------------------------|------------------------------------------|
 | 0 | current_user | n/a | `current_user` | the user performing the action |
 | 1 | controller_params | n/a | `params` | the full params hash from the controller |
 | 2 | params_for_action | `controller_params` | `create_params`, `index_params`, etc |  e.g.: requiring a foreign key when looking up index |
 | 3 | action | `controller_params[:action]` | `action_name` | the name of the current action |
-| 4 | model_key | `nil` | underscored model class name | the underscored model class name |
+| 4 | options | `{}` | skinny_controllers_config options |
 
 ### For JSON-API
 
@@ -231,7 +231,13 @@ module UserOperations
   class Create < SkinnyControllers::Operation::Base
     def run
       @model = model_class.new(model_params)
-      @model.save if allowed?
+
+      # raising an exception here allows the corresponding resource controller to
+      # `rescue_from SkinnyControllers::DeniedByPolicy` and have a uniform error
+      # returned to the frontend
+      raise SkinnyControllers::DeniedByPolicy.new('Something Horrible') unless allowed?
+
+      @model.save
       return @model # or just `model`
     end
   end
@@ -243,7 +249,9 @@ end
 module UserOperations
   class Update < SkinnyControllers::Operation::Base
     def run
-      return unless allowed?
+      # this throws a DeniedByPolicy exception if `allowed?` returns false
+      check_allowed!
+
       model.update(model_params)
       model
     end
@@ -266,16 +274,7 @@ module UserOperations
 end
 ```
 
-And given that this method exists on the `User` model:
-```ruby
-# realistically, you'd only want users to be able to access themselves
-def is_accessible_to?(user)
-  self.id == user.id
-end
-```
-
-Making a call to the destroy action on the `UsersController` will only succeed if the user trying to delete themselves. (Possibly to 'cancel their account')
-
+NOTE: `allowed?` is `true` by default via the `SkinnyControllers.allow_by_default` option.
 
 ## Defining Policies
 
@@ -284,8 +283,8 @@ These are where you define your access logic, and how to decide if a user has ac
 
 ```ruby
 class EventPolicy < SkinnyControllers::Policy::Base
-  def read?(o = object)
-    o.is_accessible_to?(user)
+  def read?(event = object)
+    event.user == user
   end
 end
 ```
@@ -297,26 +296,20 @@ These are snippets taking from other projects.
 
 ### Finding a record when the id parameter isn't passed
 
-
-
 ```ruby
 module HostOperations
   class Read < SkinnyControllers::Operation::Base
     def run
-      model # always allowed, never restricted
+       # always allowed, never restricted
+       # (because there is now call to allowed?)
+      model
     end
 
-    # Needs to be overridden, because a 'host' can be either
-    # an Event or an Organization.
-    #
     # the params to this method should include the subdomain
     # e.g.: { subdomain: 'swingin2015' }
     def model_from_params
       subdomain = params[:subdomain]
-      # first check the events, since those are more commonly used
-      host = Event.find_by_domain(subdomain)
-      # if the event doesn't exist, see if we have an organization
-      host ||= Organization.find_by_domain(subdomain)
+      host = Host.find_by_subdomain(subdomain)
     end
   end
 end
@@ -355,7 +348,7 @@ module MembershipRenewalOperations
       # so, because the list is sorted by user id, then updated at,
       # for each user, the first renewal will be chosen...
       # and because it is descending, that means the most recent renewal
-      sorted_renewals.uniq{|r| r.user_id}
+      sorted_renewals.uniq { |r| r.user_id }
     end
   end
 
@@ -371,6 +364,7 @@ module UserOperations
   class Update < SkinnyControllers::Operation::Base
     def run
       return unless allowed_for?(current_user)
+      # update with password provided by Devise
       current_user.update_with_password(model_params)
       current_user
     end
@@ -416,9 +410,9 @@ describe HostOperations do
       let(:operation){ HostOperations::Read.new(nil, { subdomain: subdomain }) }
 
       it 'finds an event' do
-        event = create(:event, domain: subdomain)
+        host = create(:host, domain: subdomain)
         model = operation.run
-        expect(model).to eq event
+        expect(model).to eq host
       end
       #...
 ```
@@ -479,12 +473,6 @@ describe PackagePolicy do
 
 ## Globally Configurable Options
 
-All of these can be set on `SkinnyControllers`,
-e.g.:
-```ruby
-SkinnyControllers.controller_namespace = 'API'
-```
-
 The following options are available:
 
 |Option|Default|Note|
@@ -494,13 +482,7 @@ The following options are available:
 |`policy_suffix`|`'Policy'`  | Default suffix for policies classes. |
 |`controller_namespace`|`''`| Global Namespace for all controllers (e.g.: `'API'`) |
 |`allow_by_default`| `true` | Default permission |
-|`accessible_to_method`|`is_accessible_to?`| method to call an the object that the user might be able to access |
-|`accessible_to_scope`| `accessible_to`| scope / class method on an object that the user might be able to access |
 |`action_map`| see [skinny_controllers.rb](./lib/skinny_controllers.rb#L61)| |
-
-
-
-
 
 
 -------------------------------------------------------

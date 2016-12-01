@@ -107,6 +107,10 @@ module SkinnyControllers
         allowed_for?(model)
       end
 
+      def check_allowed!(*args)
+        raise DeniedByPolicy(*args.presence || action) unless allowed?
+      end
+
       # checks the policy
       def allowed_for?(object)
         policy_for(object).send(policy_method_name)

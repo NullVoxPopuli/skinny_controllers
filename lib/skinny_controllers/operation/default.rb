@@ -46,7 +46,7 @@ module SkinnyControllers
       end
 
       def check_allowed!
-        raise DeniedByPolicy, action unless allowed?
+        super(action)
       end
     end
   end
