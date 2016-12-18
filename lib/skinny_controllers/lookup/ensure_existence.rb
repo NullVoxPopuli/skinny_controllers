@@ -43,8 +43,9 @@ module SkinnyControllers
     end
 
     def namespace_lookup(qualified_name)
-      return if qualified_name.blank?
-      klass = qualified_name.safe_constantize
+      klass = class_for_qualified_name(qualified_name)
+      # Return if the constant exists, or if we can't travel
+      # up any higher.
       return klass if klass
       return unless qualified_name.include?('::')
 
@@ -65,9 +66,7 @@ module SkinnyControllers
     end
 
     def policy_lookup(qualified_name)
-      return if qualified_name.blank?
-      klass = qualified_name.safe_constantize
-
+      klass = class_for_qualified_name(qualified_name)
       # Return if the constant exists, or if we can't travel
       # up any higher.
       return klass if klass
@@ -87,9 +86,7 @@ module SkinnyControllers
     end
 
     def operation_lookup(qualified_name)
-      return if qualified_name.blank?
-      klass = qualified_name.safe_constantize
-
+      klass = class_for_qualified_name(qualified_name)
       # Return if the constant exists, or if we can't travel
       # up any higher.
       return klass if klass
@@ -112,6 +109,15 @@ module SkinnyControllers
 
       # recurse
       operation_lookup(next_lookup)
+    end
+
+    private
+
+    def class_for_qualified_name(qualified_name)
+      # Validate the name.
+      return if qualified_name.blank?
+
+      qualified_name.safe_constantize
     end
   end
 end
