@@ -43,10 +43,8 @@ module SkinnyControllers
     end
 
     def namespace_lookup(qualified_name)
-      return if qualified_name.blank?
-      klass = qualified_name.safe_constantize
-      return klass if klass
-      return unless qualified_name.include?('::')
+      klass, name_flag = lookup_helper(qualified_name, __method__)
+      return klass if name_flag
 
       parts = qualified_name.split('::')
 
@@ -65,13 +63,8 @@ module SkinnyControllers
     end
 
     def policy_lookup(qualified_name)
-      return if qualified_name.blank?
-      klass = qualified_name.safe_constantize
-
-      # Return if the constant exists, or if we can't travel
-      # up any higher.
-      return klass if klass
-      return unless qualified_name.include?('::')
+      klass, name_flag = lookup_helper(qualified_name, __method__)
+      return klass if name_flag
 
       # "Api::V1::CategoryPolicy"
       # => "CategorPolicy"
@@ -87,13 +80,8 @@ module SkinnyControllers
     end
 
     def operation_lookup(qualified_name)
-      return if qualified_name.blank?
-      klass = qualified_name.safe_constantize
-
-      # Return if the constant exists, or if we can't travel
-      # up any higher.
-      return klass if klass
-      return unless qualified_name.scan(/::/).count > 1
+      klass, name_flag = lookup_helper(qualified_name, __method__)
+      return klass if name_flag
 
       # "Api::V1::CategoryOperations::Create"
       # => "CategorOperations::Create"
@@ -112,6 +100,34 @@ module SkinnyControllers
 
       # recurse
       operation_lookup(next_lookup)
+    end
+
+    private
+
+    # Decides if the constant exists or if we can travel any higher. Also,
+    # validates the qualified_name in case it is blank.
+    #
+    # @param [String] qualified_name
+    # @param [Symbol] sender The sender method
+    #
+    # @return [Array<Constant, Boolean>]
+    def lookup_helper(qualified_name, sender)
+      # Validate the name.
+      name_flag, klass = qualified_name.blank?
+      return klass, true if name_flag
+
+      # Return if the constant exists.
+      klass = qualified_name.safe_constantize
+      return klass, true if klass
+
+      # Determine if we can travel up any higher.
+      name_flag = if sender == :operation_lookup
+                    qualified_name.scan(/::/).count <= 1
+                  else
+                    !qualified_name.include?('::')
+                  end
+
+      return klass, name_flag
     end
   end
 end
