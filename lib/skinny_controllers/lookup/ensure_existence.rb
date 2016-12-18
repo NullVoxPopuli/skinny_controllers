@@ -113,8 +113,8 @@ module SkinnyControllers
     # @return [Array<Constant, Boolean>]
     def lookup_helper(qualified_name, sender)
       # Validate the name.
-      name_flag, klass = qualified_name.blank?
-      return klass, true if name_flag
+      name_flag = qualified_name.blank?
+      return klass, name_flag if name_flag # return nil as the klass value
 
       # Return if the constant exists.
       klass = qualified_name.safe_constantize
