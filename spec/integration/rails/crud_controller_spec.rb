@@ -8,7 +8,7 @@ describe UsersController, type: :controller do
       allow(controller).to receive(:current_user) { user }
 
       expect do
-        delete :destroy, id: user.id
+        delete :destroy, params: { id: user.id }
       end.to change(User, :count).by(-1)
     end
 
@@ -20,7 +20,7 @@ describe UsersController, type: :controller do
       allow(controller).to receive(:current_user) { current_user }
 
       expect do
-        delete :destroy, id: user.id
+        delete :destroy, params: { id: user.id }
       end.to change(User, :count).by(0)
     end
   end
@@ -30,7 +30,7 @@ describe EventsController, type: :controller do
   context 'create' do
     it 'creates an event' do
       expect do
-        post :create, event: { name: 'created' }
+        post :create, params: { event: { name: 'created' } }
       end.to change(Event, :count).by(1)
 
       json = JSON.parse response.body
@@ -43,7 +43,7 @@ describe EventsController, type: :controller do
     it 'updates an existing event' do
       event = create(:event)
       name = event.name + ' updated'
-      put :update, id: event.id, event: { name: name }
+      put :update, params: { id: event.id, event: { name: name } }
       json = JSON.parse response.body
 
       expect(json['name']).to eq name
@@ -54,7 +54,7 @@ describe EventsController, type: :controller do
     it 'destroys an existing event' do
       event = create(:event)
       expect do
-        delete :destroy, id: event.id
+        delete :destroy, params: { id: event.id }
       end.to change(Event, :count).by(-1)
     end
   end

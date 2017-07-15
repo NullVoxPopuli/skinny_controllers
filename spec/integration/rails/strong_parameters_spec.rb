@@ -6,7 +6,7 @@ describe StrongParametersController, type: :controller do
     it 'calls the model params' do
       expect(controller).to receive(:event_params).and_call_original
 
-      post :create, event: { name: 'created' }
+      post :create, params: { event: { name: 'created' } }
     end
   end
 
@@ -15,7 +15,7 @@ describe StrongParametersController, type: :controller do
       expect(controller).to receive(:update_event_params).and_call_original
       event = create(:event)
 
-      put :update, id: event.id, event: { name: 'updated' }
+      put :update, params: { id: event.id, event: { name: 'updated' } }
     end
   end
 

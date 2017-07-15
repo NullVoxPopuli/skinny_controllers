@@ -12,7 +12,7 @@ describe RequiresParentController, type: :controller do
       create(:discount)
       discount = create(:discount, event: event)
 
-      get :index, event_id: event.id
+      get :index, params: { event_id: event.id }
 
       json = JSON.parse(response.body)
       expect(json.count).to eq 1
@@ -24,7 +24,7 @@ describe RequiresParentController, type: :controller do
       notthis = create(:discount)
       discount = create(:discount, event: event)
 
-      get :index, event_id: event.id
+      get :index, params: { event_id: event.id }
 
       json = JSON.parse(response.body)
       expect(json.count).to eq 1
@@ -48,7 +48,7 @@ describe RequiresParentController, type: :controller do
       create(:discount)
       discount = create(:discount, event: event)
 
-      get :show, id: discount.id, event_id: event.id
+      get :show, params: { id: discount.id, event_id: event.id }
 
       json = JSON.parse(response.body)
       expect(json['id']).to eq discount.id
@@ -59,7 +59,7 @@ describe RequiresParentController, type: :controller do
       notthis = create(:discount)
       discount = create(:discount, event: event)
 
-      get :show, id: discount.id, event_id: event.id
+      get :show, params: { id: discount.id, event_id: event.id }
 
       json = JSON.parse(response.body)
       expect(json['id']).to_not eq notthis.id
@@ -70,7 +70,7 @@ describe RequiresParentController, type: :controller do
       discount = create(:discount, event: event)
 
       expect do
-        get :show, id: discount.id
+        get :show, params: { id: discount.id }
       end.to raise_error
     end
 
@@ -79,7 +79,7 @@ describe RequiresParentController, type: :controller do
       create(:discount, event: event)
       discount = create(:discount, event: event)
 
-      get :show, id: discount.id, event_id: event.id
+      get :show, params: { id: discount.id, event_id: event.id }
 
       json = JSON.parse(response.body)
       expect(json['id']).to eq discount.id

@@ -21,9 +21,11 @@ class RequiresParentController < ApplicationController
 
   def index_params
     params.require(:event_id)
+    params
   end
 
   def show_params
     params.require(:event_id)
+    params
   end
 end

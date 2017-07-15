@@ -19,7 +19,7 @@ describe OtherItemsController, type: :controller do
     end
 
     it 'retrieves only tho two items' do
-      get :index, super_item_id: @s.id
+      get :index, params: { super_item_id: @s.id }
 
       json = JSON.parse(response.body)
       expect(json.count).to eq 2
@@ -30,7 +30,7 @@ describe OtherItemsController, type: :controller do
     it 'creates an event' do
       skip('not the test currently being solved')
       expect do
-        post :create, other_item: { name: 'created' }
+        post :create, params: { other_item: { name: 'created' } }
       end.to change(SuperItem::Item, :count).by(1)
 
       json = JSON.parse response.body

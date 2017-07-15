@@ -25,7 +25,7 @@ describe EventsController, type: :controller do
 
     it 'filters events based on a list of ids' do
       ids = [event1.id, event2.id]
-      get :index, filter: { id: ids }
+      get :index, params: { filter: { id: ids } }
 
       json = JSON.parse(response.body)
       expect(json.count).to eq 2

@@ -10,7 +10,7 @@ describe DiscountsController, type: :controller do
   it 'calls a non-crud action' do
     discount = create(:discount, event: @event)
     expect_any_instance_of(DiscountOperations::RefundPayment).to receive(:run).and_call_original
-    get :refund_payment, id: discount.id
+    get :refund_payment, params: { id: discount.id }
   end
 
   it 'returns a list of discounts scoped to the event' do
@@ -18,7 +18,7 @@ describe DiscountsController, type: :controller do
 
     # TODO: how do we require the scope?
     # -- authorize the parent, unauthorize the child
-    get :index, scope: { id: @event.id, type: @event.class.name }
+    get :index, params: { scope: { id: @event.id, type: @event.class.name } }
     json = JSON.parse(response.body)
 
     expect(json.count).to eq 1
@@ -46,7 +46,7 @@ describe DiscountsController, type: :controller do
 
         # TODO: how do we require the scope?
         # -- authorize the parent, unauthorize the child
-        get :index, event_id: @event.id
+        get :index, params: { event_id: @event.id }
         json = JSON.parse(response.body)
 
         expect(json.first['id']).to eq discount.id
@@ -55,7 +55,7 @@ describe DiscountsController, type: :controller do
       it 'does not find the discount, because the event is wrong' do
         create(:discount, event: @event)
         wrong_event = create(:event)
-        get :index, event_id: wrong_event.id
+        get :index, params: { event_id: wrong_event.id }
         json = JSON.parse(response.body)
 
         expect(json).to be_empty

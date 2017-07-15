@@ -2,6 +2,8 @@
 class EventsController < ApplicationController
   include SkinnyControllers::Diet
 
+  # respond_to :json
+
   def index
     render json: model
   end
@@ -34,6 +36,7 @@ class EventsController < ApplicationController
     EventOperations
     EventPolicy
     # rubocop:enable Lint/Void
-    render nothing: true
+
+    render json: {}
   end
 end

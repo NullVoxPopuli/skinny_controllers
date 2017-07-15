@@ -9,7 +9,7 @@ describe ItemsController, type: :controller do
   context 'create' do
     it 'creates an event' do
       expect do
-        post :create, item: { name: 'created' }
+        post :create, params: { item: { name: 'created' } }
       end.to change(SuperItem::Item, :count).by(1)
 
       json = JSON.parse response.body

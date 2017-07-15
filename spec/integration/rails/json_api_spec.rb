@@ -15,7 +15,7 @@ describe JsonApiEventsController, type: :controller do
         }
 
         expect do
-          post :create, json_api
+          post :create, params: json_api
         end.to change(Event, :count).by(1)
       end
     end
@@ -37,7 +37,7 @@ describe JsonApiEventsController, type: :controller do
           format: 'json'
         }
 
-        patch :update, json_api
+        patch :update, params: json_api
 
         expect(Event.find(event.id).name).to eq new_name
       end
