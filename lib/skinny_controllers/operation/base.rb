@@ -22,8 +22,8 @@ module SkinnyControllers
         :_lookup
 
       class << self
-        def run(current_user, params)
-          object = new(current_user, params)
+        def run(*args)
+          object = new(*args)
           object.run
         end
 
@@ -50,15 +50,25 @@ module SkinnyControllers
         action = nil,
         lookup = nil,
         options = {})
+
+
+
         self.authorized_via_parent = false
         self.current_user = current_user
         self.action = action || controller_params[:action]
-        self.params = controller_params
-        self.params_for_action = params_for_action || controller_params
+        self.params = params_to_hash(controller_params)
+        self.params_for_action = params_to_hash(params_for_action || controller_params)
+
         self._lookup = lookup
         self.options = options
         self.model_key = options[:model_params_key]
         self.association_name = options[:association_name]
+      end
+
+      def params_to_hash(parameters)
+        return parameters.to_unsafe_hash if parameters.respond_to?(:to_unsafe_hash)
+
+        parameters.to_h
       end
 
       def lookup

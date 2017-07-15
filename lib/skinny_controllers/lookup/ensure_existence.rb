@@ -1,5 +1,7 @@
 module SkinnyControllers
   class Lookup
+    # NOTE: This is a lot of hackery.
+    #       Please Explicitly Define things if you are able
     module EnsureExistence
       module_function
 

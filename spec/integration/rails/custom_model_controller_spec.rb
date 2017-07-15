@@ -8,7 +8,7 @@ describe EventSummariesController, type: :controller do
 
   it 'renders the event as there is no event summary' do
     event = create(:event)
-    get :show, id: event.id
+    get :show, params: { id: event.id }
 
     json = JSON.parse(response.body)
     expect(json['id']).to eq event.id

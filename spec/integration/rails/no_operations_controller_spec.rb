@@ -12,7 +12,7 @@ describe NoOperationsController, type: :controller do
       allow(controller).to receive(:current_user) { create(:user) }
       no_operation = create(:no_operation)
 
-      get :show, id: no_operation.id
+      get :show, params: { id: no_operation.id }
       expect(response.status).to eq 200
 
       json = JSON.parse(response.body)
@@ -23,7 +23,7 @@ describe NoOperationsController, type: :controller do
   context 'create' do
     it 'creates' do
       expect do
-        post :create, no_operation: {}
+        post :create, params: { no_operation: {} }
       end.to change(NoOperation, :count).by(1)
     end
   end

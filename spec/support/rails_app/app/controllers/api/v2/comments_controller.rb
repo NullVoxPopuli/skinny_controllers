@@ -4,7 +4,7 @@ module Api
       include SkinnyControllers::Diet
 
       def create
-        render text: model
+        render json: model
       end
     end
   end

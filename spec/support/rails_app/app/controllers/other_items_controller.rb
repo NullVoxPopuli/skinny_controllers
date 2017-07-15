@@ -26,6 +26,7 @@ class OtherItemsController < ApplicationController
   end
 
   def index_params
-    params[:filter] ? params : params.require(:super_item_id)
+    params.require(:super_item_id) if params[:filter]
+    params
   end
 end

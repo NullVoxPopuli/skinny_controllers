@@ -6,7 +6,7 @@ describe JsonApiEventsController, type: :controller do
     it 'destroys a record, ignoring event_params' do
       event = create(:event)
       expect do
-        delete :destroy, id: event.id
+        delete :destroy, params: { id: event.id }
       end.to change(Event, :count).by(-1)
     end
   end
