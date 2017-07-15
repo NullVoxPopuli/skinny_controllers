@@ -17,7 +17,7 @@ describe ExampleOperations::Read do
   context :instantiation do
     it 'sets accessors' do
       user = TestUser.new
-      params = { a: :b }
+      params = { "a" => :b }
       operation = klass.new(user, params)
       expect(operation.current_user).to eq user
       expect(operation.params).to eq params

@@ -39,4 +39,9 @@ class EventsController < ApplicationController
 
     render json: {}
   end
+
+  def event_params
+    params.permit!
+    params
+  end
 end

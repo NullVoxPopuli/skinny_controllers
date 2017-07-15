@@ -32,7 +32,7 @@ module SkinnyControllers
 
       def sanitized_params
         keys = (model_class.column_names & params.keys)
-        params.slice(*keys).symbolize_keys
+        params.slice(*keys)
       end
 
       # TODO: add a way to use existing strong parameters methods
@@ -43,7 +43,7 @@ module SkinnyControllers
         unless @model_params
           model_params = (params_for_action[model_param_name] || params_for_action)
 
-          @model_params = model_params == params ? {} : model_params.symbolize_keys
+          @model_params = model_params == params ? {} : model_params
         end
 
         @model_params

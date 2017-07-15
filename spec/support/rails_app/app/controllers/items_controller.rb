@@ -18,4 +18,9 @@ class ItemsController < ApplicationController
   def create
     render json: model
   end
+
+  def item_params
+    params.permit!
+    params
+  end
 end
