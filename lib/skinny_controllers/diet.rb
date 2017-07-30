@@ -77,7 +77,9 @@ module SkinnyControllers
 
     # In order of most specific, to least specific:
     # - {action}_{model_name}_params
-    # - {model_name}_params
+    # - {action}_params
+    # - {model_key}_params
+    # - resource_params
     # - params
     #
     # It's recommended to use whitelisted strong parameters on
@@ -100,16 +102,26 @@ module SkinnyControllers
           _lookup.model_name.underscore
         end
 
-      action_params_method = "#{action_name}_#{model_key}_params"
-      model_params_method = "#{model_key}_params"
+      params_lookups = [
+        # e.g.: create_post_params
+        "#{action_name}_#{model_key}_params",
+        # generic for action
+        "#{action_name}_params",
+        # e.g.: post_params
+        "#{model_key}_params",
+        # most generic
+        'resource_params'
+      ]
 
-      if respond_to?(action_params_method, true)
-        send(action_params_method)
-      elsif respond_to?(model_params_method, true)
-        send(model_params_method)
-      else
-        params
+      lookup_params_for_action(params_lookups)
+    end
+
+    def lookup_params_for_action(lookups)
+      lookups.each do |method_name|
+        return send(method_name) if respond_to?(method_name, true)
       end
+
+      params
     end
 
     # action name is inherited from ActionController::Base
