@@ -64,6 +64,10 @@ module SkinnyControllers
       # TODO: think of a way to override the authorized_via_parent functionality
       def read_all?
         return true if authorized_via_parent
+
+        # Might be deceptive...
+        return true if object.nil? || object.empty?
+
         # This is expensive, so try to avoid it
         # TODO: look in to creating a cache for
         # these look ups that's invalidated upon
